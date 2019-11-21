@@ -89,7 +89,10 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 if(expireDate.after(currentDate)){
-                    startActivity(new Intent(MainActivity.this, VoteActivity.class));
+                  Intent intent =  new Intent(MainActivity.this, VoteActivity.class);
+                  intent.putExtra("QuestionId", questionIdEditText.getText().toString());
+                  intent.putExtra("RoomName", roomNameEditText.getText().toString());
+                  startActivity(intent);
                 }
                 else{
                     Toast.makeText(getApplicationContext(), "Sorry but the vote is over", Toast.LENGTH_SHORT).show();

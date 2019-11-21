@@ -28,4 +28,5 @@
     <string name="room_name">Room name:</string>
     <string name="vote">Vote</string>
     <string name="i_don_t_want_to_answer">I don\'t want to answer</string>
+    <string name="brace">{</string>
 </resources>

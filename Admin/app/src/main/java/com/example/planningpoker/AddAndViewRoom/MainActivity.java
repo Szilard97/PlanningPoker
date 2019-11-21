@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
                 calendar1.set(Calendar.YEAR, year);
                 calendar1.set(Calendar.MONTH, month);
                 calendar1.set(Calendar.DATE, date);
-                String dateText = DateFormat.format("EEEE, MMM d, yyyy", calendar1).toString();
+                String dateText = DateFormat.format("dd/MM/yyyy", calendar1).toString();
 
                 dateTextView.setText(dateText);
             }
@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
                 Calendar calendar1 = Calendar.getInstance();
                 calendar1.set(Calendar.HOUR, hour);
                 calendar1.set(Calendar.MINUTE, minute);
-                String dateText = DateFormat.format("h:mm a", calendar1).toString();
+                String dateText = DateFormat.format("HH:mm", calendar1).toString();
                 timeTextView.setText(dateText);
             }
         }, HOUR, MINUTE, is24HourFormat);
@@ -163,9 +163,6 @@ public class MainActivity extends AppCompatActivity {
         myRef = FirebaseDatabase.getInstance().getReference();
 
         dataControl();
-
-
-
     }
 
     private void createQuestion() {
@@ -182,36 +179,33 @@ public class MainActivity extends AppCompatActivity {
             myRef.child("Admins").child(user[0]).child(mRoomName.getText().toString()).setValue("");
 
             myRef.child("Group ID's").child(mRoomName.getText().toString()).child(mQuestionID.getText().toString())
-                    .child("End data and time:").child("Time").setValue(timeTextView.getText().toString());
+                    .child("ExpirationDate").child("Time").setValue(timeTextView.getText().toString());
 
             myRef.child("Group ID's").child(mRoomName.getText().toString()).child(mQuestionID.getText().toString())
-                    .child("End data and time:").child("Data").setValue(dateTextView.getText().toString());
+                    .child("ExpirationDate").child("Date").setValue(dateTextView.getText().toString());
 
             myRef.child("Group ID's").child(mRoomName.getText().toString()).child(mQuestionID.getText().toString())
-                    .child(mQuestion.getText().toString()).child("1").setValue("");
+                    .child("Question").child(mQuestion.getText().toString()).child("1").setValue("");
 
             myRef.child("Group ID's").child(mRoomName.getText().toString()).child(mQuestionID.getText().toString())
-                    .child(mQuestion.getText().toString()).child("2").setValue("");
+                    .child("Question").child(mQuestion.getText().toString()).child("2").setValue("");
 
             myRef.child("Group ID's").child(mRoomName.getText().toString()).child(mQuestionID.getText().toString())
-                    .child(mQuestion.getText().toString()).child("3").setValue("");
+                    .child("Question").child(mQuestion.getText().toString()).child("3").setValue("");
 
             myRef.child("Group ID's").child(mRoomName.getText().toString()).child(mQuestionID.getText().toString())
-                    .child(mQuestion.getText().toString()).child("4").setValue("");
+                    .child("Question").child(mQuestion.getText().toString()).child("4").setValue("");
 
             myRef.child("Group ID's").child(mRoomName.getText().toString()).child(mQuestionID.getText().toString())
-                    .child(mQuestion.getText().toString()).child("5").setValue("");
+                    .child("Question").child(mQuestion.getText().toString()).child("5").setValue("");
+
+            myRef.child("Group ID's").child(mRoomName.getText().toString()).child(mQuestionID.getText().toString())
+                    .child("Question").child(mQuestion.getText().toString()).child("I don't want to answer").setValue("");
         }
 
         createEmptyFields();
 
-        Question question = new Question(mRoomName.getText().toString());
-
-        mQuestions.add(question);
-
         Toast.makeText( getApplicationContext(),"Your room is ready", Toast.LENGTH_SHORT).show();
-
-        license = true;
 
     }
 
@@ -241,6 +235,8 @@ public class MainActivity extends AppCompatActivity {
         mRoomName.setText("");
         mQuestion.setText("");
         mQuestionID.setText("");
+        dateTextView.setText("");
+        timeTextView.setText("");
     }
 
     private Boolean controlInputFieldsForCreateRoomButton() {

@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">MyPlanningPokerAdmin</string>
+    <string name="lEmailTextView">Email</string>
+    <string name="lPasswordTextView">Password</string>
+    <string name="lPlanning_poker_admin">Planning Poker User</string>
+    <string name="lLoginButton">Login</string>
+    <string name="rEmailTextView">Email</string>
+    <string name="rRegisterButton">Register</string>
+    <string name="lRemember_me">Remember Me</string>
+    <string name="mCreate_sessionTextView">Create Session</string>
+    <string name="please_enter_your_question">Please enter your question*</string>
+    <string name="your_question">Your question:</string>
+    <string name="please_enter_a_question_id">Please enter a question ID*</string>
+    <string name="question_id">Question ID:</string>
+    <string name="view_my_session">View my session</string>
+    <string name="your_session_name">Your session name:</string>
+    <string name="items_marked_with_an_are_required">Items marked with * are required for CREATE ROOM</string>
+    <string name="view_my_room">View My room</string>
+    <string name="create_session">Create Session</string>
+    <string name="crete_room">Crete Room</string>
+    <string name="please_enter_your_room_name">Please enter your room name*</string>
+    <string name="your_room_name">Your room name:</string>
+    <string name="enough_your_room_name_and_question_id_to_open_view_my_room">Enough Your room name to open VIEW MY ROOM</string>
+    <string name="create_room_or_view_room">Create Room or View Room</string>
+    <string name="please_set_the_voting_expiration_date">Please set the voting expiration date*</string>
+    <string name="mDataButton">Data</string>
+    <string name="mTimeButton">Time</string>
+</resources>

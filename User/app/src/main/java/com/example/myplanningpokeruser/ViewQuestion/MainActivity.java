@@ -94,8 +94,6 @@ public class MainActivity extends AppCompatActivity {
                 else{
                     Toast.makeText(getApplicationContext(), "Sorry but the vote is over", Toast.LENGTH_SHORT).show();
                 }
-
-
             }
 
             @Override
@@ -105,8 +103,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
-        //mRef.child("Group ID's").child("ih").setValue("dkcbjsdwlkc");
     }
 
     private void bindWidget() {

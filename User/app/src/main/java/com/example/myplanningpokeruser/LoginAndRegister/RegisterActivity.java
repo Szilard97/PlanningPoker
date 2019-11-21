@@ -102,9 +102,9 @@ public class RegisterActivity extends AppCompatActivity {
     private void addNewUser() {
 
 
-        String email = rEmailEditText.getText().toString();
+        String emailNickName = rEmailEditText.getText().toString();
 
-        String [] user = email.split("@");
+        String [] user = emailNickName.split("@");
 
         ++numberOfUser;
 
@@ -112,9 +112,11 @@ public class RegisterActivity extends AppCompatActivity {
 
         myRef.child("Users").child(user[0]).setValue("");
 
-        
+        myRef.child("Users").child("Number of users").setValue(numberOfUser);
 
-        myRef.child("Users").setValue(numberOfUser);
+        Log.d("alma", user[0]);
+
+
 
     }
 }

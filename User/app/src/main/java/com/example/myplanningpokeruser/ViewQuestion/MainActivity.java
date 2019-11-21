@@ -3,6 +3,8 @@ package com.example.myplanningpokeruser.ViewQuestion;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,12 +18,17 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
     private Button voteButton;
     private EditText roomNameEditText, questionIdEditText;
     private DatabaseReference mRef;
+    private Date expireDate, currentDate;
+
 
 
     @Override
@@ -55,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-
             String data = dataSnapshot.child("Group ID's")
                     .child(roomNameEditText.getText().toString())
                     .child(questionIdEditText.getText().toString())
@@ -70,8 +76,25 @@ public class MainActivity extends AppCompatActivity {
                         .child("Time")
                         .getValue().toString();
 
-            Log.d("korte", data);
-            Log.d("korte", time);
+                String expireDateString = data  + " " + time;
+
+                @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                String currentDateString = formatter.format(new Date());
+
+                try {
+                    expireDate = formatter.parse(expireDateString);
+                    currentDate = formatter.parse(currentDateString);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                if(expireDate.after(currentDate)){
+                    startActivity(new Intent(MainActivity.this, VoteActivity.class));
+                }
+                else{
+                    Toast.makeText(getApplicationContext(), "Sorry but the vote is over", Toast.LENGTH_SHORT).show();
+                }
+
 
             }
 

@@ -11,15 +11,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.planningpoker.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MyQuestionAdapter  extends RecyclerView.Adapter<MyQuestionAdapter.QuestionViewHolder> {
 
     private Context mContext;
-    private List<Question> questionList;
+    private ArrayList<Question> questionList;
 
 
-    public MyQuestionAdapter(Context mContext, List<Question> questionList) {
+    public MyQuestionAdapter(Context mContext, ArrayList<Question> questionList) {
         this.mContext = mContext;
         this.questionList = questionList;
     }
@@ -27,9 +28,9 @@ public class MyQuestionAdapter  extends RecyclerView.Adapter<MyQuestionAdapter.Q
     @NonNull
     @Override
     public QuestionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(mContext);
-        View view = inflater.inflate(R.layout.example_layout, null);
-        return new QuestionViewHolder(view);
+
+        return new QuestionViewHolder(LayoutInflater.from(mContext)
+                .inflate(R.layout.example_layout, parent, false));
 
     }
 
@@ -39,6 +40,15 @@ public class MyQuestionAdapter  extends RecyclerView.Adapter<MyQuestionAdapter.Q
         Question question = questionList.get(position);
 
         holder.textViewRoom.setText(question.getRoomName());
+        holder.textViewQuestionId.setText(question.getId());
+        holder.textViewQuestion.setText(question.getQuestion());
+        holder.textViewExpireDate.setText(question.getExpireDate());
+        holder.textViewAnswerOne.setText(question.getAnswe1());
+        holder.textViewAnswerTwo.setText(question.getAnswer2());
+        holder.textViewAnswerThree.setText(question.getAnswer3());
+        holder.textViewAnswerFour.setText(question.getAnswer4());
+        holder.textViewAnswerFive.setText(question.getAnswer5());
+        holder.textViewAnswerIDont.setText(question.getIdontAnswer());
 
     }
 
@@ -49,11 +59,26 @@ public class MyQuestionAdapter  extends RecyclerView.Adapter<MyQuestionAdapter.Q
 
     class QuestionViewHolder extends RecyclerView.ViewHolder {
 
-        TextView textViewRoom;
+        TextView textViewRoom, textViewQuestionId,
+                    textViewExpireDate,
+                    textViewQuestion, textViewAnswerOne,
+                    textViewAnswerTwo, textViewAnswerThree,
+                    textViewAnswerFour, textViewAnswerFive,
+                    textViewAnswerIDont;
 
         public QuestionViewHolder(@NonNull View itemView) {
             super(itemView);
+
             textViewRoom = itemView.findViewById(R.id.textViewRoomName);
+            textViewQuestionId = itemView.findViewById(R.id.cTextViewQuestionId);
+            textViewQuestion =  itemView.findViewById(R.id.textViewQuestion);
+            textViewAnswerOne = itemView.findViewById(R.id.textViewReplyOne);
+            textViewAnswerTwo = itemView.findViewById(R.id.textViewReplTwo);
+            textViewAnswerThree = itemView.findViewById(R.id.textViewReplyThree);
+            textViewAnswerFour = itemView.findViewById(R.id.textViewReplyFor);
+            textViewAnswerFive = itemView.findViewById(R.id.textViewReplyFive);
+            textViewAnswerIDont = itemView.findViewById(R.id.IDont);
+            textViewExpireDate = itemView.findViewById(R.id.textViewEndDataEndTime);
         }
     }
 }

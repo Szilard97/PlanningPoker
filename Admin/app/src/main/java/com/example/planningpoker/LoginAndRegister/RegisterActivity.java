@@ -21,8 +21,8 @@ import com.google.firebase.auth.FirebaseAuth;
 public class RegisterActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
-    EditText rEmailEditText, rPasswordEditText;
-    Button rRegisterButton;
+    private EditText rEmailEditText, rPasswordEditText;
+    private Button rRegisterButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +52,7 @@ public class RegisterActivity extends AppCompatActivity {
                     createNewUser();
                 }
                 else
-                    Toast.makeText(getApplicationContext(), "Please enter your email addren and password", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Please enter your email address and password", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -86,7 +86,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                         } else {
                             Log.d("alma", task.getException().toString());
-                            Toast.makeText(RegisterActivity.this, "Authentication failed.",
+                            Toast.makeText(RegisterActivity.this, "Authentication failed."+ task.getException().toString(),
                                     Toast.LENGTH_SHORT).show();
                         }
                     }

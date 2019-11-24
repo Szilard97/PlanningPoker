@@ -26,8 +26,8 @@ public class LoginActivity extends AppCompatActivity {
     private CheckBox mCheckBoxRemember;
     private SharedPreferences mSharedPreference;
     private static final String PREFS_NAME="PreFsFile";
-    EditText lEmailEditText, lPasswordEditText;
-    Button lLoginButton, lRegisterButton;
+    private EditText lEmailEditText, lPasswordEditText;
+    private Button lLoginButton, lRegisterButton;
     private FirebaseAuth mAuth;
 
     @Override

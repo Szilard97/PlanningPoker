@@ -178,29 +178,28 @@ public class MainActivity extends AppCompatActivity {
         if( license ){
             myRef.child("Admins").child(user[0]).child(mRoomName.getText().toString()).setValue("");
 
-            myRef.child("Group ID's").child(mRoomName.getText().toString()).child(mQuestionID.getText().toString())
-                    .child("ExpirationDate").child("Time").setValue(timeTextView.getText().toString());
 
-            myRef.child("Group ID's").child(mRoomName.getText().toString()).child(mQuestionID.getText().toString())
-                    .child("ExpirationDate").child("Date").setValue(dateTextView.getText().toString());
+            myRef.child("GroupID").child(mRoomName.getText().toString()).child(mQuestionID.getText().toString())
+                    .child(mQuestion.getText().toString()).child("1").setValue("");
 
-            myRef.child("Group ID's").child(mRoomName.getText().toString()).child(mQuestionID.getText().toString())
-                    .child("Question").child(mQuestion.getText().toString()).child("1").setValue("");
+            myRef.child("GroupID").child(mRoomName.getText().toString()).child(mQuestionID.getText().toString())
+                    .child(mQuestion.getText().toString()).child("2").setValue("");
 
-            myRef.child("Group ID's").child(mRoomName.getText().toString()).child(mQuestionID.getText().toString())
-                    .child("Question").child(mQuestion.getText().toString()).child("2").setValue("");
+            myRef.child("GroupID").child(mRoomName.getText().toString()).child(mQuestionID.getText().toString())
+                    .child(mQuestion.getText().toString()).child("3").setValue("");
 
-            myRef.child("Group ID's").child(mRoomName.getText().toString()).child(mQuestionID.getText().toString())
-                    .child("Question").child(mQuestion.getText().toString()).child("3").setValue("");
+            myRef.child("GroupID").child(mRoomName.getText().toString()).child(mQuestionID.getText().toString())
+                    .child(mQuestion.getText().toString()).child("4").setValue("");
 
-            myRef.child("Group ID's").child(mRoomName.getText().toString()).child(mQuestionID.getText().toString())
-                    .child("Question").child(mQuestion.getText().toString()).child("4").setValue("");
+            myRef.child("GroupID").child(mRoomName.getText().toString()).child(mQuestionID.getText().toString())
+                    .child(mQuestion.getText().toString()).child("5").setValue("");
 
-            myRef.child("Group ID's").child(mRoomName.getText().toString()).child(mQuestionID.getText().toString())
-                    .child("Question").child(mQuestion.getText().toString()).child("5").setValue("");
+            myRef.child("GroupID").child(mRoomName.getText().toString()).child(mQuestionID.getText().toString())
+                    .child(mQuestion.getText().toString()).child("I don't want to answer").setValue("");
 
-            myRef.child("Group ID's").child(mRoomName.getText().toString()).child(mQuestionID.getText().toString())
-                    .child("Question").child(mQuestion.getText().toString()).child("I don't want to answer").setValue("");
+            myRef.child("GroupID").child(mRoomName.getText().toString()).child(mQuestionID.getText().toString())
+                    .child(mQuestion.getText().toString()).child("ExpirationDate")
+                    .setValue(dateTextView.getText().toString() + " " + timeTextView.getText().toString());
         }
 
         createEmptyFields();
@@ -214,7 +213,7 @@ public class MainActivity extends AppCompatActivity {
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if((dataSnapshot.child("Group ID's").child(mRoomName.getText().toString()).child(mQuestionID.getText().toString())).exists()){
+                if((dataSnapshot.child("GroupID").child(mRoomName.getText().toString()).child(mQuestionID.getText().toString())).exists()){
                     license = false;
                     Log.d("alma", mRoomName.getText().toString());
                 }

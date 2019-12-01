@@ -1,13 +1,19 @@
 package com.example.myplanningpokeruser.ViewQuestion;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.myplanningpokeruser.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -18,24 +24,36 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class VoteActivity extends AppCompatActivity {
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class VoteFragment extends Fragment {
 
     private TextView textViewQuestion;
     private Button buttonVote1, buttonVote2,
             buttonVote3, buttonVote4, buttonVote5, buttonIDont;
-    private String enteredQuestionId, enteredRoomName;
+    private String enteredQuestionId, enteredRoomName, enteredQuestion;
     private DatabaseReference mRef;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_vote);
 
-        bindWidget();
+    public VoteFragment() {
+
+    }
+
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        View view =  inflater.inflate(R.layout.fragment_vote, container, false);
+
+        bindWidget(view);
 
         questionVisualization();
 
         vote();
+
+        return view;
     }
 
     private void questionVisualization() {
@@ -44,15 +62,22 @@ public class VoteActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                String data = dataSnapshot.child("Group ID's")
-                        .child(enteredRoomName)
-                        .child(enteredQuestionId)
-                        .child("Question")
-                        .getValue().toString();
+                for (DataSnapshot dataSnapshot1: dataSnapshot.getChildren()){
+                    //Log.d("korte", String.valueOf(dataSnapshot1.getKey()));
+                    for (DataSnapshot dataSnapshot2: dataSnapshot1.getChildren()){
+                        //Log.d("korte", String.valueOf(dataSnapshot2.getKey()));
+                        for (DataSnapshot dataSnapshot3: dataSnapshot2.getChildren()){
+                            //Log.d("korte", String.valueOf(dataSnapshot3.getKey()));
 
-                String [] question = data.split("=");
+                            if(String.valueOf(dataSnapshot1.getKey()).equals(enteredRoomName)&&
+                                    String.valueOf(dataSnapshot2.getKey()).equals(enteredQuestionId)){
+                                textViewQuestion.setText(String.valueOf(dataSnapshot3.getKey()));
+                                enteredQuestion = String.valueOf(dataSnapshot3.getKey());
+                            }
+                        }
+                    }
 
-                textViewQuestion.setText(question[0].substring(1));
+                }
             }
 
             @Override
@@ -77,12 +102,11 @@ public class VoteActivity extends AppCompatActivity {
 
                 String [] user = email.split("@");
 
-                mRef.child("Group ID's").child(enteredRoomName)
+                mRef.child("GroupID").child(enteredRoomName)
                         .child(enteredQuestionId)
-                        .child("Question")
-                        .child(textViewQuestion.getText().toString())
+                        .child(enteredQuestion)
                         .child("1").setValue(user[0]);
-                finish();
+                //finish();
             }
         });
 
@@ -96,14 +120,12 @@ public class VoteActivity extends AppCompatActivity {
 
                 String [] user = email.split("@");
 
-                mRef.child("Group ID's").child(enteredRoomName)
+                mRef.child("GroupID").child(enteredRoomName)
                         .child(enteredQuestionId)
-                        .child("Question")
-                        .child(textViewQuestion.getText().toString())
+                        .child(enteredQuestion)
                         .child("2").setValue(user[0]);
-                finish();
+               // finish();
             }
-
         });
 
         buttonVote3.setOnClickListener(new View.OnClickListener() {
@@ -116,12 +138,11 @@ public class VoteActivity extends AppCompatActivity {
 
                 String [] user = email.split("@");
 
-                mRef.child("Group ID's").child(enteredRoomName)
+                mRef.child("GroupID").child(enteredRoomName)
                         .child(enteredQuestionId)
-                        .child("Question")
-                        .child(textViewQuestion.getText().toString())
+                        .child(enteredQuestion)
                         .child("3").setValue(user[0]);
-                finish();
+               // finish();
             }
         });
 
@@ -135,12 +156,11 @@ public class VoteActivity extends AppCompatActivity {
 
                 String [] user = email.split("@");
 
-                mRef.child("Group ID's").child(enteredRoomName)
+                mRef.child("GroupID").child(enteredRoomName)
                         .child(enteredQuestionId)
-                        .child("Question")
-                        .child(textViewQuestion.getText().toString())
+                        .child(enteredQuestion)
                         .child("4").setValue(user[0]);
-                finish();
+                //finish();
             }
         });
 
@@ -154,12 +174,11 @@ public class VoteActivity extends AppCompatActivity {
 
                 String [] user = email.split("@");
 
-                mRef.child("Group ID's").child(enteredRoomName)
+                mRef.child("GroupID").child(enteredRoomName)
                         .child(enteredQuestionId)
-                        .child("Question")
-                        .child(textViewQuestion.getText().toString())
+                        .child(enteredQuestion)
                         .child("5").setValue(user[0]);
-                finish();
+                //finish();
             }
         });
 
@@ -173,32 +192,36 @@ public class VoteActivity extends AppCompatActivity {
 
                 String [] user = email.split("@");
 
-                mRef.child("Group ID's").child(enteredRoomName)
+                mRef.child("GroupID").child(enteredRoomName)
                         .child(enteredQuestionId)
-                        .child("Question")
-                        .child(textViewQuestion.getText().toString())
+                        .child(enteredQuestion)
                         .child("I don't want to answer").setValue(user[0]);
-                finish();
+                //finish();
             }
         });
     }
 
-    private void bindWidget() {
+    private void bindWidget(View view) {
 
-        textViewQuestion = findViewById(R.id.vTextViewQuestion);
-        buttonIDont = findViewById(R.id.buttonIDont);
-        buttonVote1 = findViewById(R.id.buttonVote1);
-        buttonVote2 = findViewById(R.id.buttonVote2);
-        buttonVote3 = findViewById(R.id.buttonVote3);
-        buttonVote4 = findViewById(R.id.buttonVote4);
-        buttonVote5 = findViewById(R.id.buttonVote5);
+        textViewQuestion = view.findViewById(R.id.vTextViewQuestion);
+        buttonIDont = view.findViewById(R.id.buttonIDont);
+        buttonVote1 = view.findViewById(R.id.buttonVote1);
+        buttonVote2 = view.findViewById(R.id.buttonVote2);
+        buttonVote3 = view.findViewById(R.id.buttonVote3);
+        buttonVote4 = view.findViewById(R.id.buttonVote4);
+        buttonVote5 = view.findViewById(R.id.buttonVote5);
 
-        Intent intent = getIntent();
-        enteredQuestionId = intent.getExtras().getString("QuestionId");
-        enteredRoomName = intent.getExtras().getString("RoomName");
+        Bundle bundle = this.getArguments();
+        if(bundle != null){
+            Log.d("alma", bundle.toString());
+            enteredQuestionId = bundle.getString("QuestionId");
+            enteredRoomName = bundle.getString("RoomName");
+        }else
+            Toast.makeText(getContext(), "Problem", Toast.LENGTH_SHORT).show();
 
-        mRef = FirebaseDatabase.getInstance().getReference();
+        Log.d("alma", enteredQuestionId + " " + enteredRoomName);
+
+        mRef = FirebaseDatabase.getInstance().getReference().child("GroupID");
     }
-
 
 }

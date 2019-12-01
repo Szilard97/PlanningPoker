@@ -1,45 +1,59 @@
 package com.example.planningpoker.LoginAndRegister;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.planningpoker.AddAndViewRoom.MainActivity;
+import com.example.planningpoker.AddAndViewRoom.MainFragment;
 import com.example.planningpoker.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class RegisterActivity extends AppCompatActivity {
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class RegisterFragment extends Fragment {
 
     private FirebaseAuth mAuth;
     private EditText rEmailEditText, rPasswordEditText;
     private Button rRegisterButton;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
+    public RegisterFragment() {
+    }
 
-        bindWidget();
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        View view = inflater.inflate(R.layout.fragment_register, container, false);
+
+        bindWidget(view);
 
         register();
 
+        return view;
     }
 
-    private void bindWidget() {
-        rEmailEditText = findViewById(R.id.rEmailLabel);
-        rPasswordEditText = findViewById(R.id.rPasswordLabel);
-        rRegisterButton = findViewById(R.id.rButtonRegister);
+    private void bindWidget(View view) {
+
+        rEmailEditText = view.findViewById(R.id.rEmailLabel);
+        rPasswordEditText = view.findViewById(R.id.rPasswordLabel);
+        rRegisterButton = view.findViewById(R.id.rButtonRegister);
         mAuth = FirebaseAuth.getInstance();
+
     }
 
     private void register() {
@@ -52,7 +66,7 @@ public class RegisterActivity extends AppCompatActivity {
                     createNewUser();
                 }
                 else
-                    Toast.makeText(getApplicationContext(), "Please enter your email address and password", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Please enter your email address and password", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -75,21 +89,21 @@ public class RegisterActivity extends AppCompatActivity {
         Log.d("alma", email);
         Log.d("alma",password);
         mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Log.d("alma","Registration is successful");
-                            Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
-                            finish();
-                            startActivity(intent);
+                            LoginActivity.fragmentManager.beginTransaction()
+                                    .replace(R.id.frameLayout, new MainFragment(), null).commit();
 
                         } else {
                             Log.d("alma", task.getException().toString());
-                            Toast.makeText(RegisterActivity.this, "Authentication failed."+ task.getException().toString(),
+                            Toast.makeText(getActivity(), "Authentication failed."+ task.getException().toString(),
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
     }
+
 }

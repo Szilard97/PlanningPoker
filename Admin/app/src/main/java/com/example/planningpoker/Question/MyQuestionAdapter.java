@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.planningpoker.R;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MyQuestionAdapter  extends RecyclerView.Adapter<MyQuestionAdapter.QuestionViewHolder> {
 
@@ -43,7 +42,7 @@ public class MyQuestionAdapter  extends RecyclerView.Adapter<MyQuestionAdapter.Q
         holder.textViewQuestionId.setText(question.getId());
         holder.textViewQuestion.setText(question.getQuestion());
         holder.textViewExpireDate.setText(question.getExpireDate());
-        holder.textViewAnswerOne.setText(question.getAnswe1());
+        holder.textViewAnswerOne.setText(question.getAnswer1());
         holder.textViewAnswerTwo.setText(question.getAnswer2());
         holder.textViewAnswerThree.setText(question.getAnswer3());
         holder.textViewAnswerFour.setText(question.getAnswer4());

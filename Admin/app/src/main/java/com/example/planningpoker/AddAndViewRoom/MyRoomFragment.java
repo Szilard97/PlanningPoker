@@ -1,19 +1,21 @@
 package com.example.planningpoker.AddAndViewRoom;
 
+
+import android.os.Bundle;
+
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Bundle;
-import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.planningpoker.Question.MyQuestionAdapter;
 import com.example.planningpoker.Question.Question;
 import com.example.planningpoker.R;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -22,30 +24,39 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class MyRoom extends AppCompatActivity {
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class MyRoomFragment extends Fragment {
 
 
     private DatabaseReference myRef;
-    private  RecyclerView mRecyclerView;
+    private RecyclerView mRecyclerView;
     private ArrayList<Question> mArrayList;
     private MyQuestionAdapter myQuestionAdapter;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_room);
+    public MyRoomFragment() {
+        // Required empty public constructor
+    }
 
-        bindWidget();
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+       View view = inflater.inflate(R.layout.fragment_my_room, container, false);
+
+        bindWidget(view);
 
         addDataToRecyclerView();
 
+       return view;
     }
 
     private void addDataToRecyclerView() {
 
         myRef = FirebaseDatabase.getInstance().getReference().child("GroupID");
 
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -67,21 +78,21 @@ public class MyRoom extends AppCompatActivity {
 
                             for(DataSnapshot forth: thirdFor.getChildren()){
 
-                            if(String.valueOf(forth.getKey()).equals("1")){
-                                one = String.valueOf(forth.getValue());
-                            }else if(String.valueOf(forth.getKey()).equals("2")){
-                                two = String.valueOf(forth.getValue());
-                            }else if(String.valueOf(forth.getKey()).equals("3")){
-                                three = String.valueOf(forth.getValue());
-                            }else if(String.valueOf(forth.getKey()).equals("4")){
-                                four = String.valueOf(forth.getValue());
-                            }else if(String.valueOf(forth.getKey()).equals("5")){
-                                five = String.valueOf(forth.getValue());
-                            }else if(String.valueOf(forth.getKey()).equals("ExpirationDate")){
-                                expire = "Expire date: " + String.valueOf(forth.getValue());
-                            }else{
-                                iDont = String.valueOf(forth.getValue());
-                            }
+                                if(String.valueOf(forth.getKey()).equals("1")){
+                                    one = String.valueOf(forth.getValue());
+                                }else if(String.valueOf(forth.getKey()).equals("2")){
+                                    two = String.valueOf(forth.getValue());
+                                }else if(String.valueOf(forth.getKey()).equals("3")){
+                                    three = String.valueOf(forth.getValue());
+                                }else if(String.valueOf(forth.getKey()).equals("4")){
+                                    four = String.valueOf(forth.getValue());
+                                }else if(String.valueOf(forth.getKey()).equals("5")){
+                                    five = String.valueOf(forth.getValue());
+                                }else if(String.valueOf(forth.getKey()).equals("ExpirationDate")){
+                                    expire = "Expire date: " + String.valueOf(forth.getValue());
+                                }else{
+                                    iDont = String.valueOf(forth.getValue());
+                                }
 
 
                             }
@@ -97,7 +108,7 @@ public class MyRoom extends AppCompatActivity {
                     }
                 }
 
-                myQuestionAdapter = new MyQuestionAdapter(MyRoom.this, mArrayList);
+                myQuestionAdapter = new MyQuestionAdapter(getContext(), mArrayList);
                 mRecyclerView.setAdapter(myQuestionAdapter);
 
                 /*Question questionEventListener = forDataSnapshot.getValue(Question.class);
@@ -120,7 +131,7 @@ public class MyRoom extends AppCompatActivity {
                 //Question questionEventListener  = new Question(forDataSnapshot.getKey(), forDataSnapshot.getValue().toString(), "sdada");
 
                     /*try {
-                        //Question questionEventListener  = forDataSnapshot.getValue(Question.class);
+                        Question questionEventListener  = forDataSnapshot.getValue(Question.class);
                         Log.d("korte", String.valueOf(forDataSnapshot.getValue(Question.class)));
                         mArrayList.add(questionEventListener);
                         myQuestionAdapter = new MyQuestionAdapter(MyRoom.this, mArrayList);
@@ -131,21 +142,22 @@ public class MyRoom extends AppCompatActivity {
                 //Log.d("korte", String.valueOf(mArrayList.size()));
 
 
-        }
+            }
 
-        @Override
-        public void onCancelled(@NonNull DatabaseError databaseError) {
-            Toast.makeText(getApplicationContext(),
-                    "Error mRecyclerView"+ databaseError.toString(),
-                    Toast.LENGTH_SHORT).show();
-        }
-    });
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(getActivity(),
+                        "Error mRecyclerView"+ databaseError.toString(),
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 
-    private void bindWidget() {
-        mRecyclerView = findViewById(R.id.recyclerView);
+    private void bindWidget(View view) {
+        mRecyclerView = view.findViewById(R.id.recyclerView);
 
         mArrayList = new ArrayList<>();
     }
+
 }

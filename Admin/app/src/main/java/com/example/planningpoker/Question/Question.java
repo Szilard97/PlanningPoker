@@ -31,7 +31,7 @@ public class Question {
         return expireDate;
     }
 
-    public String getAnswe1() {
+    public String getAnswer1() {
         return "1: " + answer1;
     }
 
@@ -66,4 +66,5 @@ public class Question {
     public String getRoomName() {
         return "Room name: " + roomName;
     }
+
 }

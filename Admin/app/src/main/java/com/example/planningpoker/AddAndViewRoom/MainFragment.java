@@ -1,15 +1,20 @@
 package com.example.planningpoker.AddAndViewRoom;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 import android.text.format.DateFormat;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -17,6 +22,8 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.planningpoker.LoginAndRegister.LoginActivity;
+import com.example.planningpoker.LoginAndRegister.RegisterFragment;
 import com.example.planningpoker.Question.Question;
 import com.example.planningpoker.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,9 +37,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class MainActivity extends AppCompatActivity {
-
-    private static final String TAG = "MainActivity";
+public class MainFragment extends Fragment {
 
     private EditText mRoomName, mQuestion, mQuestionID;
     private Button mCreateRoomButton, mViewMyRoom, dateButton, timeButton;
@@ -40,13 +45,21 @@ public class MainActivity extends AppCompatActivity {
     private TextView dateTextView, timeTextView;
     private ArrayList<Question> mQuestions = new ArrayList<Question>();
     private Boolean license = true;
+    public static FragmentManager fragmentManager;
+    private static final String TAG = "MainActivity";
+
+
+    public MainFragment() {
+    }
+
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
 
-        bindWidget();
+        View view = inflater.inflate(R.layout.fragment_main, container, false);
+
+        bindWidget(view);
 
         createRoom();
 
@@ -55,6 +68,20 @@ public class MainActivity extends AppCompatActivity {
         setData();
 
         setTime();
+
+        return view;
+    }
+
+    private void bindWidget(View view) {
+        mRoomName = view.findViewById(R.id.RoomNameEditText);
+        mQuestion = view.findViewById(R.id.mEditTextQuestion);
+        mQuestionID = view.findViewById(R.id.mQuestionEditText);
+        mCreateRoomButton = view.findViewById(R.id.mCreateRoomButton);
+        mViewMyRoom = view.findViewById(R.id.mViewRoom);
+        dateButton = view.findViewById(R.id.mButtonData);
+        timeButton = view.findViewById(R.id.mButtonTime);
+        dateTextView = view.findViewById(R.id.mTextViewData);
+        timeTextView = view.findViewById(R.id.mTextViewTime);
     }
 
     private void setData() {
@@ -72,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
         int MONTH = calendar.get(Calendar.MONTH);
         int DATE = calendar.get(Calendar.DATE);
 
-        DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+        DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int date) {
 
@@ -105,9 +132,9 @@ public class MainActivity extends AppCompatActivity {
         Calendar calendar = Calendar.getInstance();
         int HOUR = calendar.get(Calendar.HOUR);
         int MINUTE = calendar.get(Calendar.MINUTE);
-        boolean is24HourFormat = DateFormat.is24HourFormat(this);
+        boolean is24HourFormat = DateFormat.is24HourFormat(getActivity());
 
-        TimePickerDialog timePickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
+        TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int hour, int minute) {
                 Log.i(TAG, "onTimeSet: " + hour + minute);
@@ -128,7 +155,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                startActivity(new Intent(MainActivity.this, MyRoom.class));
+                LoginActivity.fragmentManager.beginTransaction()
+                        .replace(R.id.frameLayout, new MyRoomFragment(), null).commit();
             }
         });
     }
@@ -144,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
                         addToDatabase();
                     }
                     else {
-                        Toast.makeText(getApplicationContext(), "Please enter your data", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Please enter your data", Toast.LENGTH_SHORT).show();
                     }
                 }
 
@@ -204,7 +232,7 @@ public class MainActivity extends AppCompatActivity {
 
         createEmptyFields();
 
-        Toast.makeText( getApplicationContext(),"Your room is ready", Toast.LENGTH_SHORT).show();
+        Toast.makeText( getActivity(),"Your room is ready", Toast.LENGTH_SHORT).show();
 
     }
 
@@ -247,15 +275,4 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
-    private void bindWidget() {
-        mRoomName = findViewById(R.id.RoomNameEditText);
-        mQuestion = findViewById(R.id.mEditTextQuestion);
-        mQuestionID = findViewById(R.id.mQuestionEditText);
-        mCreateRoomButton = findViewById(R.id.mCreateRoomButton);
-        mViewMyRoom = findViewById(R.id.mViewRoom);
-        dateButton = findViewById(R.id.mButtonData);
-        timeButton = findViewById(R.id.mButtonTime);
-        dateTextView = findViewById(R.id.mTextViewData);
-        timeTextView = findViewById(R.id.mTextViewTime);
-    }
 }

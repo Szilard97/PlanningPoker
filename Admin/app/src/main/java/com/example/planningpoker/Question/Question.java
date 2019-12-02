@@ -25,8 +25,7 @@ public class Question {
         this.permission = permission;
     }
 
-    public Question() {
-    }
+    public Question() {}
 
     public String getExpireDate() {
         return expireDate;
@@ -61,11 +60,11 @@ public class Question {
     }
 
     public String getId() {
-        return "Question ID: " + id;
+        return  id;
     }
 
     public String getRoomName() {
-        return "Room name: " + roomName;
+        return  roomName;
     }
 
     public String getPermission() {

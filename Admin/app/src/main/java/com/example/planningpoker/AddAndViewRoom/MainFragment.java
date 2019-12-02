@@ -1,10 +1,8 @@
 package com.example.planningpoker.AddAndViewRoom;
 
-
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -269,6 +267,7 @@ public class MainFragment extends Fragment {
                 && !mQuestion.getText().toString().isEmpty()){
             return true;
         }
+        Toast.makeText(getActivity(), "Items marked with * are required", Toast.LENGTH_SHORT).show();
         return false;
     }
 

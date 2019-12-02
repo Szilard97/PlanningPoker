@@ -3,11 +3,9 @@ package com.example.planningpoker.LoginAndRegister;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +14,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import com.example.planningpoker.AddAndViewRoom.MainFragment;
 import com.example.planningpoker.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -24,12 +21,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
 import static android.content.Context.MODE_PRIVATE;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class LoginFragment extends Fragment {
 
 
@@ -42,7 +35,6 @@ public class LoginFragment extends Fragment {
     public static FragmentManager fragmentManager;
 
     public LoginFragment() {
-        // Required empty public constructor
     }
 
 

@@ -70,10 +70,10 @@ public class MyRoomFragment extends Fragment {
                         expire= null, permission = null;
 
                 for(DataSnapshot forDataSnapshot: dataSnapshot.getChildren()) {
-                    Log.d("korte", String.valueOf(forDataSnapshot.getKey()));
+                    //Log.d("korte", String.valueOf(forDataSnapshot.getKey()));
 
                     for (DataSnapshot secondFor : forDataSnapshot.getChildren()) {
-                        //Log.d("korte", String.valueOf(secondFor.getKey()));
+                        Log.d("korte", String.valueOf(secondFor.getKey()));
 
                         for (DataSnapshot thirdFor: secondFor.getChildren()){
                             //Log.d("korte", String.valueOf(thirdFor.getKey()));
@@ -171,10 +171,12 @@ public class MyRoomFragment extends Fragment {
                 return true;
 
             case 122:
+                myQuestionAdapter.setPermissionTrue(item.getGroupId());
                 displayMessage("Permission selected true...");
                 return true;
 
             case 123:
+                myQuestionAdapter.setPermissionFalse(item.getGroupId());
                 displayMessage("Permission selected false");
                 return true;
 

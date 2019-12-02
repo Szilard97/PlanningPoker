@@ -149,7 +149,8 @@ public class MainFragment extends Fragment {
             public void onClick(View v) {
 
                 LoginActivity.fragmentManager.beginTransaction()
-                        .replace(R.id.frameLayout, new MyRoomFragment(), null).commit();
+                        .replace(R.id.frameLayout, new MyRoomFragment(),
+                                null).addToBackStack(null).commit();
             }
         });
     }
@@ -199,7 +200,6 @@ public class MainFragment extends Fragment {
         if( license ){
             myRef.child("Admins").child(user[0]).child(mRoomName.getText().toString()).setValue(" ");
 
-
             myRef.child("GroupID").child(mRoomName.getText().toString()).child(mQuestionID.getText().toString())
                     .child(mQuestion.getText().toString()).child("1").setValue(" ");
 
@@ -221,7 +221,11 @@ public class MainFragment extends Fragment {
             myRef.child("GroupID").child(mRoomName.getText().toString()).child(mQuestionID.getText().toString())
                     .child(mQuestion.getText().toString()).child("ExpirationDate")
                     .setValue(dateTextView.getText().toString() + " " + timeTextView.getText().toString());
-        }
+
+            myRef.child("GroupID").child(mRoomName.getText().toString()).child(mQuestionID.getText().toString())
+                    .child(mQuestion.getText().toString()).child("Permission").setValue("False");
+        }else
+            Toast.makeText(getActivity(), "Please enter required fields", Toast.LENGTH_SHORT).show();
 
         createEmptyFields();
 

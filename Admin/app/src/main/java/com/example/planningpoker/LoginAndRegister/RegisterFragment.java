@@ -21,9 +21,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class RegisterFragment extends Fragment {
 
     private FirebaseAuth mAuth;
@@ -95,7 +92,10 @@ public class RegisterFragment extends Fragment {
                         if (task.isSuccessful()) {
                             Log.d("alma","Registration is successful");
                             LoginActivity.fragmentManager.beginTransaction()
-                                    .replace(R.id.frameLayout, new MainFragment(), null).commit();
+                                    .replace(R.id.frameLayout,
+                                            new LoginFragment(),
+                                            null)
+                                    .commit();
 
                         } else {
                             Log.d("alma", task.getException().toString());

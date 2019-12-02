@@ -1,12 +1,14 @@
 package com.example.planningpoker.Question;
 
 import android.content.Context;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.planningpoker.R;
@@ -48,6 +50,7 @@ public class MyQuestionAdapter  extends RecyclerView.Adapter<MyQuestionAdapter.Q
         holder.textViewAnswerFour.setText(question.getAnswer4());
         holder.textViewAnswerFive.setText(question.getAnswer5());
         holder.textViewAnswerIDont.setText(question.getIdontAnswer());
+        holder.textViewPermission.setText(question.getPermission());
 
     }
 
@@ -56,14 +59,15 @@ public class MyQuestionAdapter  extends RecyclerView.Adapter<MyQuestionAdapter.Q
         return questionList.size();
     }
 
-    class QuestionViewHolder extends RecyclerView.ViewHolder {
+    class QuestionViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
 
-        TextView textViewRoom, textViewQuestionId,
+        private TextView textViewRoom, textViewQuestionId,
                     textViewExpireDate,
                     textViewQuestion, textViewAnswerOne,
                     textViewAnswerTwo, textViewAnswerThree,
                     textViewAnswerFour, textViewAnswerFive,
-                    textViewAnswerIDont;
+                    textViewAnswerIDont, textViewPermission;
+        private CardView cardView;
 
         public QuestionViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -78,6 +82,24 @@ public class MyQuestionAdapter  extends RecyclerView.Adapter<MyQuestionAdapter.Q
             textViewAnswerFive = itemView.findViewById(R.id.textViewReplyFive);
             textViewAnswerIDont = itemView.findViewById(R.id.IDont);
             textViewExpireDate = itemView.findViewById(R.id.textViewEndDataEndTime);
+            textViewPermission = itemView.findViewById(R.id.textViewPermission);
+            cardView = itemView.findViewById(R.id.eCardView);
+            cardView.setOnCreateContextMenuListener(this);
         }
+
+        @Override
+        public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+            menu.setHeaderTitle("Select an Option");
+            menu.add(this.getAdapterPosition(), 121, 0, "Delete this item");
+            menu.add(this.getAdapterPosition(), 122, 1, "Set Permission to True");
+            menu.add(this.getAdapterPosition(), 123, 0, "Set Permission to False");
+
+
+        }
+    }
+
+    public void removeItem(int position){
+        questionList.remove(position);
+        notifyDataSetChanged();
     }
 }

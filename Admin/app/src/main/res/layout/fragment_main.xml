@@ -25,7 +25,7 @@
 
         <ScrollView
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -42,8 +42,8 @@
                     android:id="@+id/textViewCreateSession"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/colorOrange"
                     android:layout_marginTop="5dp"
+                    android:background="@color/colorOrange"
                     android:gravity="center"
                     android:text="@string/create_room_or_view_room"
                     android:textColor="@color/colorWhite"
@@ -68,10 +68,10 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginTop="5dp"
                     android:layout_marginRight="5dp"
-                    android:textSize="10dp"
                     android:ems="10"
                     android:hint="@string/your_room_name"
-                    android:inputType="textPersonName" />
+                    android:inputType="textPersonName"
+                    android:textSize="10dp" />
 
                 <TextView
                     android:id="@+id/mTextViewQuestion"
@@ -92,7 +92,7 @@
                     android:ems="10"
                     android:hint="@string/your_question"
                     android:inputType="textPersonName"
-                    android:textSize="10dp"/>
+                    android:textSize="10dp" />
 
                 <TextView
                     android:id="@+id/mTextViewPlese"
@@ -111,16 +111,16 @@
                     android:ems="10"
                     android:hint="@string/question_id"
                     android:inputType="textPersonName"
-                    android:textSize="10dp"/>
+                    android:textSize="10dp" />
 
                 <TextView
                     android:id="@+id/textViewPleaseSetYourEndData"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/please_set_the_voting_expiration_date"
-                    android:textSize="15dp"
                     android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"/>
+                    android:layout_marginRight="5dp"
+                    android:text="@string/please_set_the_voting_expiration_date"
+                    android:textSize="15dp" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -224,10 +224,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="50dp"
                         android:text="@string/items_marked_with_an_are_required"
+                        android:textSize="10dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
-                        android:textSize="10dp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/mCreateRoomButton" />
 
@@ -236,8 +236,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
-                        android:textSize="10dp"
                         android:text="@string/enough_your_room_name_and_question_id_to_open_view_my_room"
+                        android:textSize="10dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"

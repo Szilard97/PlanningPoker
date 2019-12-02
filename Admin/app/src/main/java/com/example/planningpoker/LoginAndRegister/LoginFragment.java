@@ -70,7 +70,10 @@ public class LoginFragment extends Fragment {
             public void onClick(View v) {
                 Log.d("korte", "itt vagyok");
                 LoginActivity.fragmentManager.beginTransaction()
-                        .replace(R.id.frameLayout, new RegisterFragment(), null).commit();
+                        .replace(R.id.frameLayout,
+                                new RegisterFragment(),
+                                null).addToBackStack(null)
+                        .commit();
             }
         });
     }

@@ -8,12 +8,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 import com.example.planningpoker.Question.MyQuestionAdapter;
 import com.example.planningpoker.Question.Question;
 import com.example.planningpoker.R;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -31,6 +33,7 @@ public class MyRoomFragment extends Fragment {
     private ArrayList<Question> mArrayList;
     private MyQuestionAdapter myQuestionAdapter;
     private ArrayList<String> userRooms;
+    private View rootView;
 
     public MyRoomFragment() {
         // Required empty public constructor
@@ -50,8 +53,6 @@ public class MyRoomFragment extends Fragment {
 
     private void addDataToRecyclerView() {
 
-
-
         getUserRooms();
 
         myRef = FirebaseDatabase.getInstance().getReference().child("GroupID");
@@ -63,7 +64,10 @@ public class MyRoomFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 Question questionEventListener;
-                String one= null, two = null, three= null, four= null, five= null, iDont= null, expire= null;
+                String one= null, two = null,
+                        three= null, four= null,
+                        five= null, iDont= null,
+                        expire= null, permission = null;
 
                 for(DataSnapshot forDataSnapshot: dataSnapshot.getChildren()) {
                     Log.d("korte", String.valueOf(forDataSnapshot.getKey()));
@@ -87,15 +91,16 @@ public class MyRoomFragment extends Fragment {
                                     five = String.valueOf(forth.getValue());
                                 }else if(String.valueOf(forth.getKey()).equals("ExpirationDate")){
                                     expire = "Expire date: " + String.valueOf(forth.getValue());
-                                }else{
+                                }else if(String.valueOf(forth.getKey()).equals("I don't want to answer")){
                                     iDont = String.valueOf(forth.getValue());
-                                }
+                                }else
+                                    permission = String.valueOf(forth.getValue());
                             }
                             questionEventListener = new Question(
                                     String.valueOf(forDataSnapshot.getKey()),
                                     String.valueOf(secondFor.getKey()),
                                     String.valueOf(thirdFor.getKey()),
-                                    one, two, three, four, five, iDont, expire);
+                                    one, two, three, four, five, iDont, expire, permission);
 
                             if (userRooms.contains(String.valueOf(forDataSnapshot.getKey()))){
                                     mArrayList.add(questionEventListener);
@@ -151,8 +156,36 @@ public class MyRoomFragment extends Fragment {
 
     private void bindWidget(View view) {
         mRecyclerView = view.findViewById(R.id.recyclerView);
-
         mArrayList = new ArrayList<>();
+        rootView = view.findViewById(R.id.rootView);
     }
 
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId()){
+
+            case 121:
+                myQuestionAdapter.removeItem(item.getGroupId());
+                displayMessage("Item deleted....");
+                return true;
+
+            case 122:
+                displayMessage("Permission selected true...");
+                return true;
+
+            case 123:
+                displayMessage("Permission selected false");
+                return true;
+
+                default:
+                    return super.onContextItemSelected(item);
+
+        }
+    }
+
+    public void displayMessage(String message){
+
+        Snackbar.make(rootView, message, Snackbar.LENGTH_SHORT).show();
+    }
 }

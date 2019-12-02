@@ -23,7 +23,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void initFragment() {
         if(findViewById(R.id.frameLayout)!=null){
-           fragmentManager = getSupportFragmentManager();
+            fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             LoginFragment loginFragment = new LoginFragment();
             fragmentTransaction.add(R.id.frameLayout, loginFragment, null);

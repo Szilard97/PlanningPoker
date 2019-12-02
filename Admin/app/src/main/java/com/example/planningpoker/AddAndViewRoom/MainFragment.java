@@ -8,8 +8,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,9 +19,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
-
 import com.example.planningpoker.LoginAndRegister.LoginActivity;
-import com.example.planningpoker.LoginAndRegister.RegisterFragment;
 import com.example.planningpoker.Question.Question;
 import com.example.planningpoker.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,10 +29,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import java.util.ArrayList;
 import java.util.Calendar;
-
 public class MainFragment extends Fragment {
 
     private EditText mRoomName, mQuestion, mQuestionID;
@@ -47,7 +41,6 @@ public class MainFragment extends Fragment {
     private Boolean license = true;
     public static FragmentManager fragmentManager;
     private static final String TAG = "MainActivity";
-
 
     public MainFragment() {
     }
@@ -204,26 +197,26 @@ public class MainFragment extends Fragment {
         myRef = FirebaseDatabase.getInstance().getReference();
 
         if( license ){
-            myRef.child("Admins").child(user[0]).child(mRoomName.getText().toString()).setValue("");
+            myRef.child("Admins").child(user[0]).child(mRoomName.getText().toString()).setValue(" ");
 
 
             myRef.child("GroupID").child(mRoomName.getText().toString()).child(mQuestionID.getText().toString())
-                    .child(mQuestion.getText().toString()).child("1").setValue("");
+                    .child(mQuestion.getText().toString()).child("1").setValue(" ");
 
             myRef.child("GroupID").child(mRoomName.getText().toString()).child(mQuestionID.getText().toString())
-                    .child(mQuestion.getText().toString()).child("2").setValue("");
+                    .child(mQuestion.getText().toString()).child("2").setValue(" ");
 
             myRef.child("GroupID").child(mRoomName.getText().toString()).child(mQuestionID.getText().toString())
-                    .child(mQuestion.getText().toString()).child("3").setValue("");
+                    .child(mQuestion.getText().toString()).child("3").setValue(" ");
 
             myRef.child("GroupID").child(mRoomName.getText().toString()).child(mQuestionID.getText().toString())
-                    .child(mQuestion.getText().toString()).child("4").setValue("");
+                    .child(mQuestion.getText().toString()).child("4").setValue(" ");
 
             myRef.child("GroupID").child(mRoomName.getText().toString()).child(mQuestionID.getText().toString())
-                    .child(mQuestion.getText().toString()).child("5").setValue("");
+                    .child(mQuestion.getText().toString()).child("5").setValue(" ");
 
             myRef.child("GroupID").child(mRoomName.getText().toString()).child(mQuestionID.getText().toString())
-                    .child(mQuestion.getText().toString()).child("I don't want to answer").setValue("");
+                    .child(mQuestion.getText().toString()).child("I don't want to answer").setValue(" ");
 
             myRef.child("GroupID").child(mRoomName.getText().toString()).child(mQuestionID.getText().toString())
                     .child(mQuestion.getText().toString()).child("ExpirationDate")

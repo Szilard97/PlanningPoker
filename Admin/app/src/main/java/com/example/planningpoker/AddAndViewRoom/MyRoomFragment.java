@@ -73,7 +73,7 @@ public class MyRoomFragment extends Fragment {
                     //Log.d("korte", String.valueOf(forDataSnapshot.getKey()));
 
                     for (DataSnapshot secondFor : forDataSnapshot.getChildren()) {
-                        Log.d("korte", String.valueOf(secondFor.getKey()));
+                        //Log.d("korte", String.valueOf(secondFor.getKey()));
 
                         for (DataSnapshot thirdFor: secondFor.getChildren()){
                             //Log.d("korte", String.valueOf(thirdFor.getKey()));
@@ -104,7 +104,7 @@ public class MyRoomFragment extends Fragment {
 
                             if (userRooms.contains(String.valueOf(forDataSnapshot.getKey()))){
                                     mArrayList.add(questionEventListener);
-                                    Log.d("barack", String.valueOf(forDataSnapshot.getKey()) + " benne  van");
+                                    //Log.d("barack", String.valueOf(forDataSnapshot.getKey()) + " benne  van");
                             }
 
                         }

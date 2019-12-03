@@ -10,6 +10,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.planningpoker.AddAndViewRoom.MainFragment;
+import com.example.planningpoker.AddAndViewRoom.MyRoomFragment;
+import com.example.planningpoker.LoginAndRegister.LoginActivity;
 import com.example.planningpoker.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -24,7 +28,7 @@ import java.util.ArrayList;
 public class MyQuestionAdapter  extends RecyclerView.Adapter<MyQuestionAdapter.QuestionViewHolder> {
 
     private Context mContext;
-private static final String TAG = "MyQuestionAdapter";
+    private static final String TAG = "MyQuestionAdapter";
     private ArrayList<Question> questionList;
     private DatabaseReference myRef;
 
@@ -117,17 +121,34 @@ private static final String TAG = "MyQuestionAdapter";
         myRef.setValue(null);
     }
 
-    public  void setPermissionTrue(int possition){
+    public  void setPermissionTrue(int position){
 
         myRef = FirebaseDatabase.getInstance().getReference().child("GroupID")
-                .child(questionList.get(possition)
+                .child(questionList.get(position)
                         .getRoomName()).child(questionList
-                        .get(possition).getId());
+                        .get(position).getId());
 
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.d("komlo", dataSnapshot.getKey());
+
+                for (DataSnapshot dataSnapshot1: dataSnapshot.getChildren()){
+                    //Log.d("komlo", dataSnapshot1.getKey());
+                    for (DataSnapshot dataSnapshot2: dataSnapshot1.getChildren()){
+                        //Log.d("komlo", dataSnapshot2.getKey());
+                        if( dataSnapshot2.getKey().equals("Permission")){
+                            //Log.d("komlo", dataSnapshot2.getKey());
+                            myRef.child(dataSnapshot1.getKey())
+                                    .child(dataSnapshot2.getKey())
+                                    .setValue("True");
+
+                            LoginActivity.fragmentManager.beginTransaction()
+                                    .replace(R.id.frameLayout, new MainFragment(),
+                                            null).addToBackStack(null).commit();
+                        }
+                    }
+                }
+
             }
 
             @Override
@@ -138,16 +159,31 @@ private static final String TAG = "MyQuestionAdapter";
 
     }
 
-    public  void setPermissionFalse(int possition){
+    public  void setPermissionFalse(int position){
 
         myRef = FirebaseDatabase.getInstance().getReference().child("GroupID")
-                .child(questionList.get(possition)
+                .child(questionList.get(position)
                         .getRoomName()).child(questionList
-                        .get(possition).getId());
+                        .get(position).getId());
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.d("komlo", dataSnapshot.getKey());
+                for (DataSnapshot dataSnapshot1: dataSnapshot.getChildren()){
+                    //Log.d("komlo", dataSnapshot1.getKey());
+                    for (DataSnapshot dataSnapshot2: dataSnapshot1.getChildren()){
+                        //Log.d("komlo", dataSnapshot2.getKey());
+                        if( dataSnapshot2.getKey().equals("Permission")){
+                            //Log.d("komlo", dataSnapshot2.getKey());
+
+                            /*myRef.child(dataSnapshot1.getKey())
+                                    .child(dataSnapshot2.getKey())
+                                    .setValue("True");*/
+                        }
+                    }
+                }
+                /*LoginActivity.fragmentManager.beginTransaction()
+                        .replace(R.id.frameLayout, new MainFragment(),
+                                null).addToBackStack(null).commit();*/
             }
 
             @Override

@@ -4,8 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
+import com.example.planningpoker.AddAndViewRoom.MainFragment;
 import com.example.planningpoker.R;
 
 public class LoginActivity extends AppCompatActivity {
@@ -30,4 +33,19 @@ public class LoginActivity extends AppCompatActivity {
             fragmentTransaction.commit();
         }
     }
+
+    /*@Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(getApplicationContext())
+                .setMessage("Are you sure you want to exit?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        LoginActivity.super.onBackPressed();
+                    }
+                })
+                .setNegativeButton("No", null)
+                .show();
+    }*/
+
 }

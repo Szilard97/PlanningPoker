@@ -137,7 +137,7 @@ public class LoginFragment extends Fragment {
         editor.putString("pref_pass", lPasswordEditText.getText().toString());
         editor.putBoolean("pref_check", boolIsChecked);
         editor.apply();
-        //Toast.makeText(getApplicationContext(), "Email and password has ben saved", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), "Email and password has ben saved", Toast.LENGTH_SHORT).show();
     }
 
     private void bindWidget(View view) {

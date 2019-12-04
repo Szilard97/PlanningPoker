@@ -183,9 +183,4 @@ public class MyRoomFragment extends Fragment {
 
         Snackbar.make(rootView, message, Snackbar.LENGTH_SHORT).show();
     }
-
-    public void createToast(){
-        Toast.makeText(getActivity(), "Sorry but already exists one Question Permission: True",
-                Toast.LENGTH_SHORT).show();
-    }
 }

@@ -110,7 +110,6 @@ public class MyQuestionAdapter  extends RecyclerView.Adapter<MyQuestionAdapter.Q
             menu.setHeaderTitle("Select an Option");
             menu.add(this.getAdapterPosition(), 121, 0, "Delete this item");
             menu.add(this.getAdapterPosition(), 122, 1, "Set Permission to True");
-            menu.add(this.getAdapterPosition(), 123, 0, "Set Permission to False");
 
 
         }
@@ -130,9 +129,7 @@ public class MyQuestionAdapter  extends RecyclerView.Adapter<MyQuestionAdapter.Q
 
     public  void setPermissionTrue(int position){
 
-        /*getPermissions(position);
-
-        //Log.d("kiwi", String.valueOf(isTrue));
+        getPermissions(position);
 
         try{
             if(!isTrue){
@@ -159,6 +156,8 @@ public class MyQuestionAdapter  extends RecyclerView.Adapter<MyQuestionAdapter.Q
                                             .replace(R.id.frameLayout, new MainFragment(),
                                                     null).addToBackStack(null).commit();
 
+                                    break;
+
                                 }
                             }
                         }
@@ -177,7 +176,7 @@ public class MyQuestionAdapter  extends RecyclerView.Adapter<MyQuestionAdapter.Q
         }
 
 
-    */}
+    }
 
     private void getPermissions(Integer position) {
 
@@ -197,9 +196,11 @@ public class MyQuestionAdapter  extends RecyclerView.Adapter<MyQuestionAdapter.Q
                             if(dataSnapshot3.getKey().equals("Permission") && dataSnapshot3.getValue().equals("True")){
                                 isTrue = true;
                                 Log.d("kiwi", "van");
+                                break;
                             }
                             else
                                 Log.d("kiwi", "nincs");
+
                         }
                     }
                 }
@@ -215,47 +216,6 @@ public class MyQuestionAdapter  extends RecyclerView.Adapter<MyQuestionAdapter.Q
 
     }
 
-    public  void setPermissionFalse(int position){
 
-        myRef = FirebaseDatabase.getInstance().getReference().child("GroupID")
-                .child(questionList.get(position)
-                        .getRoomName()).child(questionList
-                        .get(position).getId());
-
-        try{
-            myRef.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                    for (DataSnapshot dataSnapshot1: dataSnapshot.getChildren()){
-                        //Log.d("komlo", dataSnapshot1.getKey());
-                        for (DataSnapshot dataSnapshot2: dataSnapshot1.getChildren()){
-                            //Log.d("komlo", dataSnapshot2.getKey());
-                            if( dataSnapshot2.getKey().equals("Permission")){
-                                //Log.d("komlo", dataSnapshot2.getKey());
-                                myRef.child(dataSnapshot1.getKey())
-                                        .child(dataSnapshot2.getKey())
-                                        .setValue("False");
-
-                                LoginActivity.fragmentManager.beginTransaction()
-                                        .replace(R.id.frameLayout, new MainFragment(),
-                                                null).addToBackStack(null).commit();
-                            }
-                        }
-                    }
-
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-        }catch (Exception e){
-            Log.d("kiwi", e.toString());
-        }
-
-
-    }
 
 }

@@ -173,11 +173,6 @@ public class MyRoomFragment extends Fragment {
                 displayMessage("Permission selected true...");
                 return true;
 
-            case 123:
-                myQuestionAdapter.setPermissionFalse(item.getGroupId());
-                displayMessage("Permission selected false");
-                return true;
-
                 default:
                     return super.onContextItemSelected(item);
 

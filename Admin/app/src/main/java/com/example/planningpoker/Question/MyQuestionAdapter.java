@@ -1,42 +1,30 @@
 package com.example.planningpoker.Question;
 
 import android.content.Context;
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.planningpoker.AddAndViewRoom.MainFragment;
-import com.example.planningpoker.AddAndViewRoom.MyRoomFragment;
 import com.example.planningpoker.LoginAndRegister.LoginActivity;
 import com.example.planningpoker.R;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import java.security.Permissions;
 import java.util.ArrayList;
 
 public class MyQuestionAdapter  extends RecyclerView.Adapter<MyQuestionAdapter.QuestionViewHolder> {
 
     private Context mContext;
-    private static final String TAG = "MyQuestionAdapter";
     private ArrayList<Question> questionList;
     private DatabaseReference myRef;
-    private ArrayList<String> permissions = new ArrayList<>();
-    private ArrayList<String> userRooms;
     private boolean isTrue = false;
 
     public MyQuestionAdapter(Context mContext, ArrayList<Question> questionList) {
@@ -53,11 +41,10 @@ public class MyQuestionAdapter  extends RecyclerView.Adapter<MyQuestionAdapter.Q
 
     }
 
+    //hozzaadja a RecyclerView-hez az adatokat
     @Override
     public void onBindViewHolder(@NonNull QuestionViewHolder holder, int position) {
-
         Question question = questionList.get(position);
-
         holder.textViewRoom.setText(question.getRoomName());
         holder.textViewQuestionId.setText(question.getId());
         holder.textViewQuestion.setText(question.getQuestion());
@@ -72,11 +59,13 @@ public class MyQuestionAdapter  extends RecyclerView.Adapter<MyQuestionAdapter.Q
 
     }
 
+    //megnezi, hogy hany kerdes van a a RecyclerViewban
     @Override
     public int getItemCount() {
         return questionList.size();
     }
 
+    //inicializalas
     class QuestionViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
 
         private TextView textViewRoom, textViewQuestionId,
@@ -105,6 +94,7 @@ public class MyQuestionAdapter  extends RecyclerView.Adapter<MyQuestionAdapter.Q
             cardView.setOnCreateContextMenuListener(this);
         }
 
+        //megjeleniti a kerdes modositasi lehetosegeket
         @Override
         public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
             menu.setHeaderTitle("Select an Option");
@@ -115,6 +105,7 @@ public class MyQuestionAdapter  extends RecyclerView.Adapter<MyQuestionAdapter.Q
         }
     }
 
+    //kerdes torlese az ArrayListbol
     public void removeItem(int position){
         removeQuestion(questionList.get(position).getRoomName(),
                 questionList.get(position).getId());
@@ -122,17 +113,16 @@ public class MyQuestionAdapter  extends RecyclerView.Adapter<MyQuestionAdapter.Q
         notifyDataSetChanged();
     }
 
+    //kerdes torlese az adatbazisbol
     private void removeQuestion( String roomName,  String id) {
         myRef = FirebaseDatabase.getInstance().getReference().child("GroupID").child(roomName).child(id);
         myRef.setValue(null);
     }
 
+    // a kerdes aktivalasa
     public  void setPermissionTrue(int position){
 
-        getPermissions(position);
-
-        try{
-            if(!isTrue){
+                //adatbazis inicializalasa
                 myRef = FirebaseDatabase.getInstance().getReference().child("GroupID")
                         .child(questionList.get(position)
                                 .getRoomName()).child(questionList
@@ -141,17 +131,15 @@ public class MyQuestionAdapter  extends RecyclerView.Adapter<MyQuestionAdapter.Q
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
+                        //Permission Text megvaltoztatas az adatbazisban
                         for (DataSnapshot dataSnapshot1: dataSnapshot.getChildren()){
-                            //Log.d("komlo", dataSnapshot1.getKey());
                             for (DataSnapshot dataSnapshot2: dataSnapshot1.getChildren()){
-                                //Log.d("komlo", dataSnapshot2.getKey());
                                 if( dataSnapshot2.getKey().equals("Permission")){
-                                    //Log.d("komlo", dataSnapshot2.getKey());
 
                                     myRef.child(dataSnapshot1.getKey())
                                             .child(dataSnapshot2.getKey())
                                             .setValue("True");
-
+                                    //visszalep a MainFragmentre
                                     LoginActivity.fragmentManager.beginTransaction()
                                             .replace(R.id.frameLayout, new MainFragment(),
                                                     null).addToBackStack(null).commit();
@@ -169,50 +157,6 @@ public class MyQuestionAdapter  extends RecyclerView.Adapter<MyQuestionAdapter.Q
 
                     }
                 });
-            }
-
-        }catch (Exception e){
-            Log.d("kiwi", e.toString());
-        }
-
-
-    }
-
-    private void getPermissions(Integer position) {
-
-        myRef = FirebaseDatabase.getInstance().getReference().child("GroupID")
-                .child(questionList.get(position)
-                        .getRoomName());
-
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
-                    //Log.d("kiwi", dataSnapshot1.getKey());
-                    for (DataSnapshot dataSnapshot2: dataSnapshot1.getChildren()){
-                        //Log.d("kiwi", dataSnapshot2.getKey());
-                        for (DataSnapshot dataSnapshot3: dataSnapshot2.getChildren()){
-                            // Log.d("kiwi", dataSnapshot3.getKey());
-                            if(dataSnapshot3.getKey().equals("Permission") && dataSnapshot3.getValue().equals("True")){
-                                isTrue = true;
-                                Log.d("kiwi", "van");
-                                break;
-                            }
-                            else
-                                Log.d("kiwi", "nincs");
-
-                        }
-                    }
-                }
-            }
-
-
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
 
     }
 

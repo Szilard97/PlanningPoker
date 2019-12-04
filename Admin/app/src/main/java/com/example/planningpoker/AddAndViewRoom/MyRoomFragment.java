@@ -132,8 +132,6 @@ public class MyRoomFragment extends Fragment {
 
         String [] user = email.split("@");
 
-        Log.d("szilva", user[0]);
-
        userRooms = new ArrayList<>();
 
         myRef = FirebaseDatabase.getInstance().getReference().child("Admins").child(user[0]);
@@ -189,5 +187,10 @@ public class MyRoomFragment extends Fragment {
     public void displayMessage(String message){
 
         Snackbar.make(rootView, message, Snackbar.LENGTH_SHORT).show();
+    }
+
+    public void createToast(){
+        Toast.makeText(getActivity(), "Sorry but already exists one Question Permission: True",
+                Toast.LENGTH_SHORT).show();
     }
 }

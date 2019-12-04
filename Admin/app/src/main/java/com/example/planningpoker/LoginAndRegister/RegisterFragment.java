@@ -60,7 +60,6 @@ public class RegisterFragment extends Fragment {
                     Toast.makeText(getActivity(), "Please enter your email address and password", Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 
     private Boolean readDataForRegistration() {

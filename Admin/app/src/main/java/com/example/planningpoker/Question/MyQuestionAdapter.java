@@ -1,12 +1,15 @@
 package com.example.planningpoker.Question;
 
 import android.content.Context;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,6 +26,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.security.Permissions;
 import java.util.ArrayList;
 
 public class MyQuestionAdapter  extends RecyclerView.Adapter<MyQuestionAdapter.QuestionViewHolder> {
@@ -31,6 +35,9 @@ public class MyQuestionAdapter  extends RecyclerView.Adapter<MyQuestionAdapter.Q
     private static final String TAG = "MyQuestionAdapter";
     private ArrayList<Question> questionList;
     private DatabaseReference myRef;
+    private ArrayList<String> permissions = new ArrayList<>();
+    private ArrayList<String> userRooms;
+    private boolean isTrue = false;
 
     public MyQuestionAdapter(Context mContext, ArrayList<Question> questionList) {
         this.mContext = mContext;
@@ -123,33 +130,82 @@ public class MyQuestionAdapter  extends RecyclerView.Adapter<MyQuestionAdapter.Q
 
     public  void setPermissionTrue(int position){
 
+        /*getPermissions(position);
+
+        //Log.d("kiwi", String.valueOf(isTrue));
+
+        try{
+            if(!isTrue){
+                myRef = FirebaseDatabase.getInstance().getReference().child("GroupID")
+                        .child(questionList.get(position)
+                                .getRoomName()).child(questionList
+                                .get(position).getId());
+                myRef.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                        for (DataSnapshot dataSnapshot1: dataSnapshot.getChildren()){
+                            //Log.d("komlo", dataSnapshot1.getKey());
+                            for (DataSnapshot dataSnapshot2: dataSnapshot1.getChildren()){
+                                //Log.d("komlo", dataSnapshot2.getKey());
+                                if( dataSnapshot2.getKey().equals("Permission")){
+                                    //Log.d("komlo", dataSnapshot2.getKey());
+
+                                    myRef.child(dataSnapshot1.getKey())
+                                            .child(dataSnapshot2.getKey())
+                                            .setValue("True");
+
+                                    LoginActivity.fragmentManager.beginTransaction()
+                                            .replace(R.id.frameLayout, new MainFragment(),
+                                                    null).addToBackStack(null).commit();
+
+                                }
+                            }
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+        }catch (Exception e){
+            Log.d("kiwi", e.toString());
+        }
+
+
+    */}
+
+    private void getPermissions(Integer position) {
+
         myRef = FirebaseDatabase.getInstance().getReference().child("GroupID")
                 .child(questionList.get(position)
-                        .getRoomName()).child(questionList
-                        .get(position).getId());
+                        .getRoomName());
 
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                for (DataSnapshot dataSnapshot1: dataSnapshot.getChildren()){
-                    //Log.d("komlo", dataSnapshot1.getKey());
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
+                    //Log.d("kiwi", dataSnapshot1.getKey());
                     for (DataSnapshot dataSnapshot2: dataSnapshot1.getChildren()){
-                        //Log.d("komlo", dataSnapshot2.getKey());
-                        if( dataSnapshot2.getKey().equals("Permission")){
-                            //Log.d("komlo", dataSnapshot2.getKey());
-                            myRef.child(dataSnapshot1.getKey())
-                                    .child(dataSnapshot2.getKey())
-                                    .setValue("True");
-
-                            LoginActivity.fragmentManager.beginTransaction()
-                                    .replace(R.id.frameLayout, new MainFragment(),
-                                            null).addToBackStack(null).commit();
+                        //Log.d("kiwi", dataSnapshot2.getKey());
+                        for (DataSnapshot dataSnapshot3: dataSnapshot2.getChildren()){
+                            // Log.d("kiwi", dataSnapshot3.getKey());
+                            if(dataSnapshot3.getKey().equals("Permission") && dataSnapshot3.getValue().equals("True")){
+                                isTrue = true;
+                                Log.d("kiwi", "van");
+                            }
+                            else
+                                Log.d("kiwi", "nincs");
                         }
                     }
                 }
-
             }
+
+
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -165,32 +221,41 @@ public class MyQuestionAdapter  extends RecyclerView.Adapter<MyQuestionAdapter.Q
                 .child(questionList.get(position)
                         .getRoomName()).child(questionList
                         .get(position).getId());
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot dataSnapshot1: dataSnapshot.getChildren()){
-                    //Log.d("komlo", dataSnapshot1.getKey());
-                    for (DataSnapshot dataSnapshot2: dataSnapshot1.getChildren()){
-                        //Log.d("komlo", dataSnapshot2.getKey());
-                        if( dataSnapshot2.getKey().equals("Permission")){
-                            //Log.d("komlo", dataSnapshot2.getKey());
 
-                            /*myRef.child(dataSnapshot1.getKey())
-                                    .child(dataSnapshot2.getKey())
-                                    .setValue("True");*/
+        try{
+            myRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                    for (DataSnapshot dataSnapshot1: dataSnapshot.getChildren()){
+                        //Log.d("komlo", dataSnapshot1.getKey());
+                        for (DataSnapshot dataSnapshot2: dataSnapshot1.getChildren()){
+                            //Log.d("komlo", dataSnapshot2.getKey());
+                            if( dataSnapshot2.getKey().equals("Permission")){
+                                //Log.d("komlo", dataSnapshot2.getKey());
+                                myRef.child(dataSnapshot1.getKey())
+                                        .child(dataSnapshot2.getKey())
+                                        .setValue("False");
+
+                                LoginActivity.fragmentManager.beginTransaction()
+                                        .replace(R.id.frameLayout, new MainFragment(),
+                                                null).addToBackStack(null).commit();
+                            }
                         }
                     }
+
                 }
-                /*LoginActivity.fragmentManager.beginTransaction()
-                        .replace(R.id.frameLayout, new MainFragment(),
-                                null).addToBackStack(null).commit();*/
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        });
+                }
+            });
+        }catch (Exception e){
+            Log.d("kiwi", e.toString());
+        }
+
+
     }
 
 }

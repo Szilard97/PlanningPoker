@@ -36,7 +36,7 @@ public class MainFragment extends Fragment {
     private EditText roomNameEditText, questionIdEditText;
     private DatabaseReference mRef;
     private Date expireDate, currentDate;
-    String expireDateString;
+    private String expireDateString, permissionString;
 
 
     public MainFragment() {
@@ -91,9 +91,11 @@ public class MainFragment extends Fragment {
                                     if(String.valueOf(forth.getKey()).equals("ExpirationDate")){
                                         expireDateString = String.valueOf(forth.getValue());
                                         //Log.d("korte", expireDateString);
+                                    }else if(String.valueOf(forth.getKey()).equals("Permission")){
+                                        permissionString = String.valueOf(forth.getValue());
                                     }
                                 }else{
-                                    //Toast.makeText(getApplicationContext(), "I'm sorry, but no such room", Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(getActivity(), "I'm sorry, but no such room", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         }
@@ -112,18 +114,21 @@ public class MainFragment extends Fragment {
                 }
 
 
-                if(expireDate.after(currentDate)){
+                if(expireDate.after(currentDate) && permissionString.equals("True")){
                     VoteFragment voteFragment = new VoteFragment();
                     Bundle bundle = new Bundle();
                     bundle.putString("QuestionId", questionIdEditText.getText().toString());
                     bundle.putString("RoomName", roomNameEditText.getText().toString());
                     voteFragment.setArguments(bundle);
 
-                    MainActivity.fragmentManager.beginTransaction().replace(R.id.frameLayout, voteFragment).commit();
+                    MainActivity.fragmentManager.beginTransaction()
+                            .replace(R.id.frameLayout, voteFragment)
+                            .addToBackStack(null)
+                            .commit();
 
                 }
                 else{
-                    Toast.makeText(getActivity(), "Sorry but the vote is over", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Sorry but the vote is over or Permission is False", Toast.LENGTH_SHORT).show();
                 }
             }
 

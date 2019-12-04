@@ -34,12 +34,12 @@ public class VoteFragment extends Fragment {
             buttonVote3, buttonVote4, buttonVote5, buttonIDont;
     private String enteredQuestionId, enteredRoomName, enteredQuestion;
     private DatabaseReference mRef;
+    private String voteData;
 
 
     public VoteFragment() {
 
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -96,17 +96,9 @@ public class VoteFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-
-                String email = currentFirebaseUser.getEmail();
-
-                String [] user = email.split("@");
-
-                mRef.child("GroupID").child(enteredRoomName)
-                        .child(enteredQuestionId)
-                        .child(enteredQuestion)
-                        .child("1").setValue(user[0]);
-                //finish();
+                voteButton("1", enteredRoomName, enteredQuestionId, enteredQuestion);
+                Toast.makeText(getActivity(), "Thank you your vote!", Toast.LENGTH_SHORT).show();
+                getActivity().onBackPressed();
             }
         });
 
@@ -114,17 +106,9 @@ public class VoteFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-
-                String email = currentFirebaseUser.getEmail();
-
-                String [] user = email.split("@");
-
-                mRef.child("GroupID").child(enteredRoomName)
-                        .child(enteredQuestionId)
-                        .child(enteredQuestion)
-                        .child("2").setValue(user[0]);
-               // finish();
+                voteButton("2", enteredRoomName, enteredQuestionId, enteredQuestion);
+                Toast.makeText(getActivity(), "Thank you your vote!", Toast.LENGTH_SHORT).show();
+                getActivity().onBackPressed();
             }
         });
 
@@ -132,17 +116,9 @@ public class VoteFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-
-                String email = currentFirebaseUser.getEmail();
-
-                String [] user = email.split("@");
-
-                mRef.child("GroupID").child(enteredRoomName)
-                        .child(enteredQuestionId)
-                        .child(enteredQuestion)
-                        .child("3").setValue(user[0]);
-               // finish();
+                voteButton("3", enteredRoomName, enteredQuestionId, enteredQuestion);
+                Toast.makeText(getActivity(), "Thank you your vote!", Toast.LENGTH_SHORT).show();
+                getActivity().onBackPressed();
             }
         });
 
@@ -150,17 +126,9 @@ public class VoteFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-
-                String email = currentFirebaseUser.getEmail();
-
-                String [] user = email.split("@");
-
-                mRef.child("GroupID").child(enteredRoomName)
-                        .child(enteredQuestionId)
-                        .child(enteredQuestion)
-                        .child("4").setValue(user[0]);
-                //finish();
+                voteButton("4", enteredRoomName, enteredQuestionId, enteredQuestion);
+                Toast.makeText(getActivity(), "Thank you your vote!", Toast.LENGTH_SHORT).show();
+                getActivity().onBackPressed();
             }
         });
 
@@ -168,17 +136,9 @@ public class VoteFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-
-                String email = currentFirebaseUser.getEmail();
-
-                String [] user = email.split("@");
-
-                mRef.child("GroupID").child(enteredRoomName)
-                        .child(enteredQuestionId)
-                        .child(enteredQuestion)
-                        .child("5").setValue(user[0]);
-                //finish();
+                voteButton("5", enteredRoomName, enteredQuestionId, enteredQuestion);
+                Toast.makeText(getActivity(), "Thank you your vote!", Toast.LENGTH_SHORT).show();
+                getActivity().onBackPressed();
             }
         });
 
@@ -186,19 +146,42 @@ public class VoteFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-
-                String email = currentFirebaseUser.getEmail();
-
-                String [] user = email.split("@");
-
-                mRef.child("GroupID").child(enteredRoomName)
-                        .child(enteredQuestionId)
-                        .child(enteredQuestion)
-                        .child("I don't want to answer").setValue(user[0]);
-                //finish();
+                voteButton("I don't want to answer", enteredRoomName, enteredQuestionId, enteredQuestion);
+                Toast.makeText(getActivity(), "Thank you your vote!", Toast.LENGTH_SHORT).show();
+                getActivity().onBackPressed();
             }
         });
+    }
+
+    private void voteButton(final String data, String roomName, String questionId, String question) {
+
+        FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        String email = currentFirebaseUser.getEmail();
+
+        final String [] user = email.split("@");
+
+        mRef = FirebaseDatabase.getInstance().getReference().child("GroupID").child(roomName)
+                .child(questionId).child(question).child(data);
+
+        mRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                mRef.setValue( dataSnapshot.getValue().toString() + " " + user[0]);
+
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d("kiwi", databaseError.toString());
+            }
+        });
+    }
+
+
+    private void setVoteData(String voteData1) {
+        voteData= voteData1;
+        Log.d("kiwi", voteData + "itt");
     }
 
     private void bindWidget(View view) {

@@ -6,7 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -51,32 +51,34 @@ public class MyRoomFragment extends Fragment {
        return view;
     }
 
+    //adatok hozzaadasa a RecyclerViewhez
     private void addDataToRecyclerView() {
 
-        getUserRooms();
+        // a jelenlegi bejelentkezett admin szobajit kerem le
+        getAdminRooms();
 
+        //az adatbazis inicializalom a GroupID-ra
         myRef = FirebaseDatabase.getInstance().getReference().child("GroupID");
 
+        //a recyclerViewhez hozzadok egy layoutMenagert
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        //le kerem az adatbazisbol a beirt kerdeseket
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
+                //egy kerdes osztalyt hozok letre es ahoz a hozok letre Stringeket
                 Question questionEventListener;
                 String one= null, two = null,
                         three= null, four= null,
                         five= null, iDont= null,
                         expire= null, permission = null;
 
+                // vegig megyek az adatbazison
                 for(DataSnapshot forDataSnapshot: dataSnapshot.getChildren()) {
-                    //Log.d("korte", String.valueOf(forDataSnapshot.getKey()));
-
                     for (DataSnapshot secondFor : forDataSnapshot.getChildren()) {
-                        //Log.d("korte", String.valueOf(secondFor.getKey()));
-
                         for (DataSnapshot thirdFor: secondFor.getChildren()){
-                            //Log.d("korte", String.valueOf(thirdFor.getKey()));
                             for(DataSnapshot forth: thirdFor.getChildren()){
 
                                 if(String.valueOf(forth.getKey()).equals("1")){
@@ -96,27 +98,30 @@ public class MyRoomFragment extends Fragment {
                                 }else
                                     permission = String.valueOf(forth.getValue());
                             }
+                            //meghivom az Question osztalyt es abban lesznek egy kerdes adatai
                             questionEventListener = new Question(
                                     String.valueOf(forDataSnapshot.getKey()),
                                     String.valueOf(secondFor.getKey()),
                                     String.valueOf(thirdFor.getKey()),
                                     one, two, three, four, five, iDont, expire, permission);
-
+                            //hozzaadom egy ArrauListhez ha mar nincs benne
                             if (userRooms.contains(String.valueOf(forDataSnapshot.getKey()))){
                                     mArrayList.add(questionEventListener);
-                                    //Log.d("barack", String.valueOf(forDataSnapshot.getKey()) + " benne  van");
                             }
 
                         }
                     }
                 }
 
+                //egy uj Question Adaptert hozok letre aminek atadom az ArrayListet
                 myQuestionAdapter = new MyQuestionAdapter(getContext(), mArrayList);
+                //a RecyclerViewhez hozzaadom az adapert
                 mRecyclerView.setAdapter(myQuestionAdapter);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+                //ha valami gond van akkor Toast
                 Toast.makeText(getActivity(),
                         "Error mRecyclerView"+ databaseError.toString(),
                         Toast.LENGTH_SHORT).show();
@@ -124,7 +129,8 @@ public class MyRoomFragment extends Fragment {
         });
     }
 
-    private void getUserRooms() {
+    //lekerel az aktualis bejelentkezett Admin kerdes szobait
+    private void getAdminRooms() {
 
         FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -152,23 +158,27 @@ public class MyRoomFragment extends Fragment {
         });
     }
 
+    //ijnicializalom a szukseges elemeket
     private void bindWidget(View view) {
         mRecyclerView = view.findViewById(R.id.recyclerView);
         mArrayList = new ArrayList<>();
         rootView = view.findViewById(R.id.rootView);
     }
 
+    // a kerdest hosszan nyomva elojonnek a lehetosegek pl Torles vagy Aktivalas
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
 
         switch (item.getItemId()){
 
             case 121:
+                //torlest vegzi ami meghivja az adapter removeItem() fuggvenyet
                 myQuestionAdapter.removeItem(item.getGroupId());
                 displayMessage("Item deleted....");
                 return true;
 
             case 122:
+                //a kerdes aktivalasat vegzi, ami meghivja az adapter setPermissionTrue fuggvenyet
                 myQuestionAdapter.setPermissionTrue(item.getGroupId());
                 displayMessage("Permission selected true...");
                 return true;
@@ -179,8 +189,9 @@ public class MyRoomFragment extends Fragment {
         }
     }
 
+    //ha sikerult valamelyik kerdes modositasa akkor a kijelzo aljan kiirja, hogy mit csinalt az admin a kerdessel
     public void displayMessage(String message){
-
+        //Snackbar az az adott szoveg kijelzese a kepernyo aljan
         Snackbar.make(rootView, message, Snackbar.LENGTH_SHORT).show();
     }
 }

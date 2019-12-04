@@ -56,31 +56,36 @@ public class LoginFragment extends Fragment {
 
     }
 
+    //register Button megnyomasa meghivja a registerFragmentet
     private void register() {
         lRegisterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("korte", "itt vagyok");
                 LoginActivity.fragmentManager.beginTransaction()
                         .replace(R.id.frameLayout,
                                 new RegisterFragment(),
+                                //onBackPressed hogy ha a RegisterFragmentben visszalepek akkor a LoginFragmentbe lepjen vissza ne lepjen ki
                                 null).addToBackStack(null)
                         .commit();
             }
         });
     }
 
+    //ha a bejelentkezesnel pippalva van az hogy jegyezze meg a kodomat akkor itt irja vissza alkalmazas indulasakor
     private void getPreferencesData() {
 
+        //email lekeres ha el volt mentve
         SharedPreferences sp = this.getActivity().getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         if(sp.contains("pref_email")){
             String e = sp.getString("pref_email", "not found");
             lEmailEditText.setText(e.toString());
         }
+        //password le keres ha el volt mentve
         if(sp.contains("pref_pass")){
             String p = sp.getString("pref_pass", "not found");
             lPasswordEditText.setText(p.toString());
         }
+        //ha ki volt pippalva akkor maradjon ki pippalva
         if(sp.contains("pref_check")){
             Boolean b = sp.getBoolean("pref_check", false);
             mCheckBoxRemember.setChecked(b);
@@ -88,6 +93,8 @@ public class LoginFragment extends Fragment {
 
     }
 
+    //login button listener ami meghiv egy fugvenht ami ellenorzi hogy a Remmemmber me ki vane pippalva
+    // es egy msik fugvenyt ami meghivja maga a login fugvenyt
     private void loginButton() {
         lLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,7 +105,9 @@ public class LoginFragment extends Fragment {
         });
     }
 
+    //login resz
     private void login() {
+        //lekerem a EditText-bol a beirt adatokat es elkuldom a Firebasenek
         String email, password;
         email = lEmailEditText.getText().toString().trim();
         password = lPasswordEditText.getText().toString().trim();
@@ -106,13 +115,12 @@ public class LoginFragment extends Fragment {
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
+                // ha sikeres akkor atlepik a MainFragmentbe
                 if(task.isSuccessful()){
-                    FirebaseUser user = mAuth.getCurrentUser();
-                    Log.d("alma", user.getUid());
-
                     LoginActivity.fragmentManager.beginTransaction()
                             .replace(R.id.frameLayout, new MainFragment(), null).commit();
                 }else{
+                    //ha nem akkor Toast es Logban a hibat
                     Toast.makeText(getActivity(),"Login failed", Toast.LENGTH_SHORT).show();
                     Log.d("alma", task.getException().toString());
                 }
@@ -122,14 +130,18 @@ public class LoginFragment extends Fragment {
 
     }
 
+    // ellenorzi, hogy a Remember me ki van-e pippalva
     private void controlCheckBox() {
         if(mCheckBoxRemember.isChecked()){
+            //ha igen akkor meghiv egy fugvenyt ami menti az adatokat
             saveElement();
         }else{
+            //ha nincs mentve akkor akkor torli a beirt adatokat
             mSharedPreference.edit().clear().apply();
         }
     }
 
+    //adatok mentese
     private void saveElement() {
         Boolean boolIsChecked = mCheckBoxRemember.isChecked();
         SharedPreferences.Editor editor = mSharedPreference.edit();
@@ -140,6 +152,7 @@ public class LoginFragment extends Fragment {
         Toast.makeText(getActivity(), "Email and password has ben saved", Toast.LENGTH_SHORT).show();
     }
 
+    //elemek inicializalasa
     private void bindWidget(View view) {
         lEmailEditText = view.findViewById(R.id.rEmailLabel);
         lPasswordEditText = view.findViewById(R.id.rPasswordLabel);

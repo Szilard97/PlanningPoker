@@ -56,6 +56,7 @@ public class MainFragment extends Fragment {
         return view;
     }
 
+    //szavazas gomb Listener es ellenorzes hogy be irtae az adatokat
     private void vote() {
         voteButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,6 +72,7 @@ public class MainFragment extends Fragment {
         });
     }
 
+    //lekerem a lejarati datumot es ellenorzom hogy lejart-e
     private void expirationDateCheck() {
 
         mRef.addValueEventListener(new ValueEventListener() {
@@ -78,33 +80,26 @@ public class MainFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 for(DataSnapshot forDataSnapshot: dataSnapshot.getChildren()) {
-                    //Log.d("korte", String.valueOf(forDataSnapshot.getKey()));
-
                     for (DataSnapshot secondFor : forDataSnapshot.getChildren()) {
-                        //Log.d("korte", String.valueOf(secondFor.getKey()));
-
                         for (DataSnapshot thirdFor : secondFor.getChildren()) {
-                            //Log.d("korte", String.valueOf(thirdFor.getKey()));
-
                             for(DataSnapshot forth: thirdFor.getChildren()){
                                 if(roomNameEditText.getText().toString().equals(String.valueOf(forDataSnapshot.getKey()))){
                                     if(String.valueOf(forth.getKey()).equals("ExpirationDate")){
                                         expireDateString = String.valueOf(forth.getValue());
-                                        //Log.d("korte", expireDateString);
                                     }else if(String.valueOf(forth.getKey()).equals("Permission")){
                                         permissionString = String.valueOf(forth.getValue());
                                     }
-                                }else{
-                                    //Toast.makeText(getActivity(), "I'm sorry, but no such room", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         }
                     }
                 }
 
+                //a jelenlegi datum es idot keri le
                 @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
                 String currentDateString = formatter.format(new Date());
 
+                //datumok atalakitasa
                 try {
                     expireDate = formatter.parse(expireDateString);
                     currentDate = formatter.parse(currentDateString);
@@ -113,7 +108,7 @@ public class MainFragment extends Fragment {
                     Log.d("korte", e.toString());
                 }
 
-
+                //a lejarati datum es a jelenlegi datum ellenorzese
                 if(expireDate.after(currentDate) && permissionString.equals("True")){
                     VoteFragment voteFragment = new VoteFragment();
                     Bundle bundle = new Bundle();
@@ -141,6 +136,7 @@ public class MainFragment extends Fragment {
         });
     }
 
+    // a szukseges adatok inicializalasa
     private void bindWidget(View view) {
         voteButton = view.findViewById(R.id.mVoteButton);
         roomNameEditText = view.findViewById(R.id.mRoomNameEditText);

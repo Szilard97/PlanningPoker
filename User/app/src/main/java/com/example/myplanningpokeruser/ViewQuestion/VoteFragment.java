@@ -56,6 +56,7 @@ public class VoteFragment extends Fragment {
         return view;
     }
 
+    //kiiratom az adatokat az adatbazisbol a VoteFragmentbe
     private void questionVisualization() {
 
         mRef.addValueEventListener(new ValueEventListener() {
@@ -63,11 +64,8 @@ public class VoteFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 for (DataSnapshot dataSnapshot1: dataSnapshot.getChildren()){
-                    //Log.d("korte", String.valueOf(dataSnapshot1.getKey()));
                     for (DataSnapshot dataSnapshot2: dataSnapshot1.getChildren()){
-                        //Log.d("korte", String.valueOf(dataSnapshot2.getKey()));
                         for (DataSnapshot dataSnapshot3: dataSnapshot2.getChildren()){
-                            //Log.d("korte", String.valueOf(dataSnapshot3.getKey()));
 
                             if(String.valueOf(dataSnapshot1.getKey()).equals(enteredRoomName)&&
                                     String.valueOf(dataSnapshot2.getKey()).equals(enteredQuestionId)){
@@ -89,6 +87,7 @@ public class VoteFragment extends Fragment {
         });
     }
 
+    //a szavazo gombok Listener hogy mikor melyikre szavazok es lepik at a MainFragmentbe
     private void vote() {
         mRef = FirebaseDatabase.getInstance().getReference();
 
@@ -153,6 +152,7 @@ public class VoteFragment extends Fragment {
         });
     }
 
+    //szavazo gombok mentese
     private void voteButton(final String data, String roomName, String questionId, String question) {
 
         FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -164,6 +164,7 @@ public class VoteFragment extends Fragment {
         mRef = FirebaseDatabase.getInstance().getReference().child("GroupID").child(roomName)
                 .child(questionId).child(question).child(data);
 
+        //hozzaadom a szavazatot az adabazisba
         mRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -178,12 +179,7 @@ public class VoteFragment extends Fragment {
         });
     }
 
-
-    private void setVoteData(String voteData1) {
-        voteData= voteData1;
-        Log.d("kiwi", voteData + "itt");
-    }
-
+    // a szukseges adatok inicializalasa
     private void bindWidget(View view) {
 
         textViewQuestion = view.findViewById(R.id.vTextViewQuestion);

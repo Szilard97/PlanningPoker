@@ -31,14 +31,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 public class MainFragment extends Fragment {
 
-    private EditText mRoomName, mQuestion, mQuestionID;
+    private EditText mRoomName, mQuestion, mQuestionID, mVoteNumber;
     private Button mCreateRoomButton, mViewMyRoom, dateButton, timeButton;
     private DatabaseReference myRef;
     private TextView dateTextView, timeTextView;
-    private ArrayList<Question> mQuestions = new ArrayList<Question>();
     private Boolean license = true;
-    public static FragmentManager fragmentManager;
     private static final String TAG = "MainActivity";
+
 
     public MainFragment() {
     }
@@ -75,6 +74,7 @@ public class MainFragment extends Fragment {
         timeButton = view.findViewById(R.id.mButtonTime);
         dateTextView = view.findViewById(R.id.mTextViewData);
         timeTextView = view.findViewById(R.id.mTextViewTime);
+        mVoteNumber = view.findViewById(R.id.mVoteNumberPlaneTaxt);
     }
 
     //datum gomb listener, hogy a datumot megadjam gomb nyomasara es meg hiv egy fugvenyt ami majd vegzi tovabb
@@ -170,6 +170,13 @@ public class MainFragment extends Fragment {
                 //mellenorzes hogy ki vannak-e toltve, ha nem akkor Toast
                 if(controlInputFieldsForCreateRoomButton()){
 
+                    if(controlInputFieldsForCreateRoomButton()) {
+                        addToDatabase();
+                    }
+                    else {
+                        Toast.makeText(getActivity(), "Please enter your data", Toast.LENGTH_SHORT).show();
+                    }
+
                     createQuestion();
 
                     }else {
@@ -178,6 +185,19 @@ public class MainFragment extends Fragment {
 
             }
         });
+    }
+
+    private void addToDatabase() {
+
+        FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        String email = currentFirebaseUser.getEmail();
+
+        String [] user = email.split("@");
+
+        myRef = FirebaseDatabase.getInstance().getReference();
+
+        dataControl();
     }
 
     //hozzaadja az adatbazishoz a kert adatokat
@@ -226,6 +246,9 @@ public class MainFragment extends Fragment {
             // kerdes lathotosag ami alapertelmezetten False ezt az admin a kerdeseit hosszan nyomva lesz lehetosege aktivalni
             myRef.child("GroupID").child(mRoomName.getText().toString()).child(mQuestionID.getText().toString())
                     .child(mQuestion.getText().toString()).child("Permission").setValue("False");
+
+            myRef.child("GroupID").child(mRoomName.getText().toString()).child(mQuestionID.getText().toString())
+                    .child(mQuestion.getText().toString()).child("Expected votes").setValue(mVoteNumber.getText().toString());
         }else
             Toast.makeText(getActivity(), "Please enter required fields", Toast.LENGTH_SHORT).show();
 
@@ -249,7 +272,7 @@ public class MainFragment extends Fragment {
                 else{
                     license = true;
                 }
-                //
+
                 createQuestion();
             }
 
@@ -267,13 +290,14 @@ public class MainFragment extends Fragment {
         mQuestionID.setText("");
         dateTextView.setText("");
         timeTextView.setText("");
+        mVoteNumber.setText("");
     }
 
     //beirtae az osszes input adatot a kerdes hozzaadashoz
     private Boolean controlInputFieldsForCreateRoomButton() {
 
         if(!mRoomName.getText().toString().isEmpty() && !mQuestionID.getText().toString().isEmpty()
-                && !mQuestion.getText().toString().isEmpty()){
+                && !mQuestion.getText().toString().isEmpty() && !mVoteNumber.getText().toString().isEmpty()){
             return true;
         }
         //ha nem akkor ki ir egy Toast, hogy nem irta be az osszes adatot

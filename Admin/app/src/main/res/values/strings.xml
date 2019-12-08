@@ -26,5 +26,7 @@
     <string name="mDataButton">Data</string>
     <string name="mTimeButton">Time</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="please_specify_how_many_of_you_should_vote">Please specify how many of you should vote*</string>
+    <string name="votenumber">voteNumber</string>
 
 </resources>

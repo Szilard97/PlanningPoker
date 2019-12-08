@@ -104,6 +104,7 @@
                     android:text="@string/please_enter_a_question_id"
                     android:textSize="15dp" />
 
+
                 <EditText
                     android:id="@+id/mQuestionEditText"
                     android:layout_width="match_parent"
@@ -112,6 +113,24 @@
                     android:hint="@string/question_id"
                     android:inputType="textPersonName"
                     android:textSize="10dp" />
+
+                <TextView
+                    android:id="@+id/mVoteNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="15dp"
+                    android:text="@string/please_specify_how_many_of_you_should_vote" />
+
+                <EditText
+                    android:id="@+id/mVoteNumberPlaneTaxt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:textSize="10dp"
+                    android:inputType="textPersonName"
+                    android:hint="@string/votenumber" />
 
                 <TextView
                     android:id="@+id/textViewPleaseSetYourEndData"

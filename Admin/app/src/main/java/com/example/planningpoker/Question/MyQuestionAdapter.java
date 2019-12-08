@@ -100,6 +100,7 @@ public class MyQuestionAdapter  extends RecyclerView.Adapter<MyQuestionAdapter.Q
             menu.setHeaderTitle("Select an Option");
             menu.add(this.getAdapterPosition(), 121, 0, "Delete this item");
             menu.add(this.getAdapterPosition(), 122, 1, "Set Permission to True");
+            menu.add(this.getAdapterPosition(), 123, 2 ,"Set Permission to False");
 
 
         }
@@ -127,7 +128,7 @@ public class MyQuestionAdapter  extends RecyclerView.Adapter<MyQuestionAdapter.Q
                         .child(questionList.get(position)
                                 .getRoomName()).child(questionList
                                 .get(position).getId());
-                myRef.addValueEventListener(new ValueEventListener() {
+                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
@@ -139,10 +140,11 @@ public class MyQuestionAdapter  extends RecyclerView.Adapter<MyQuestionAdapter.Q
                                     myRef.child(dataSnapshot1.getKey())
                                             .child(dataSnapshot2.getKey())
                                             .setValue("True");
+
                                     //visszalep a MainFragmentre
                                     LoginActivity.fragmentManager.beginTransaction()
                                             .replace(R.id.frameLayout, new MainFragment(),
-                                                    null).addToBackStack(null).commit();
+                                                    null).commit();
 
                                     break;
 
@@ -157,6 +159,48 @@ public class MyQuestionAdapter  extends RecyclerView.Adapter<MyQuestionAdapter.Q
 
                     }
                 });
+
+    }
+
+    //a kerdes deaktivalasa
+    public  void setPermissionFalse(int position){
+
+        //adatbazis inicializalasa
+        myRef = FirebaseDatabase.getInstance().getReference().child("GroupID")
+                .child(questionList.get(position)
+                        .getRoomName()).child(questionList
+                        .get(position).getId());
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                //Permission Text megvaltoztatas az adatbazisban
+                for (DataSnapshot dataSnapshot1: dataSnapshot.getChildren()){
+                    for (DataSnapshot dataSnapshot2: dataSnapshot1.getChildren()){
+                        if( dataSnapshot2.getKey().equals("Permission")){
+
+                            myRef.child(dataSnapshot1.getKey())
+                                    .child(dataSnapshot2.getKey())
+                                    .setValue("False");
+
+                            //visszalep a MainFragmentre
+                            LoginActivity.fragmentManager.beginTransaction()
+                                    .replace(R.id.frameLayout, new MainFragment(),
+                                            null).commit();
+
+                            break;
+
+                        }
+                    }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
     }
 

@@ -2,7 +2,6 @@ package com.example.myplanningpokeruser.ViewQuestion;
 
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -17,15 +16,19 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.myplanningpokeruser.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -37,11 +40,12 @@ public class MainFragment extends Fragment {
     private DatabaseReference mRef;
     private Date expireDate, currentDate;
     private String expireDateString, permissionString;
+    private Boolean alreadyVoted;
+    private Integer votedNumber;
 
 
     public MainFragment() {
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -75,7 +79,10 @@ public class MainFragment extends Fragment {
     //lekerem a lejarati datumot es ellenorzom hogy lejart-e
     private void expirationDateCheck() {
 
-        mRef.addValueEventListener(new ValueEventListener() {
+        makeSureYouHaveAlreadyVoted();
+        Log.d("tonic", alreadyVoted.toString() + " jjjj");
+
+        mRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
@@ -108,8 +115,10 @@ public class MainFragment extends Fragment {
                     Log.d("korte", e.toString());
                 }
 
+
+
                 //a lejarati datum es a jelenlegi datum ellenorzese
-                if(expireDate.after(currentDate) && permissionString.equals("True")){
+                if(expireDate.after(currentDate) && permissionString.equals("True") && !alreadyVoted){
                     VoteFragment voteFragment = new VoteFragment();
                     Bundle bundle = new Bundle();
                     bundle.putString("QuestionId", questionIdEditText.getText().toString());
@@ -118,12 +127,12 @@ public class MainFragment extends Fragment {
 
                     MainActivity.fragmentManager.beginTransaction()
                             .replace(R.id.frameLayout, voteFragment)
-                            .addToBackStack(null)
+                            .addToBackStack("Main")
                             .commit();
 
                 }
                 else{
-                    Toast.makeText(getActivity(), "Sorry but the vote is over or Permission is False", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Sorry but the vote is over, Permission is False or has already voted", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -136,6 +145,83 @@ public class MainFragment extends Fragment {
         });
     }
 
+    private void makeSureYouHaveAlreadyVoted() {
+
+        alreadyVoted = false;
+
+        FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        String email = currentFirebaseUser.getEmail();
+
+        final String [] user = email.split("@");
+
+        mRef = FirebaseDatabase.getInstance().getReference()
+                .child("GroupID");
+
+        mRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot forDataSnapshot: dataSnapshot.getChildren()) {
+                    for (DataSnapshot secondFor : forDataSnapshot.getChildren()) {
+                        for (DataSnapshot thirdFor : secondFor.getChildren()) {
+                            for(DataSnapshot forth: thirdFor.getChildren()){
+                                if(String.valueOf(forth.getValue()).contains(user[0])
+                                        && String.valueOf(forDataSnapshot.getKey())
+                                        .equals(roomNameEditText.getText().toString())){
+                                    alreadyVoted = true;
+                                    addVotingNumber();
+                                }
+
+
+                            }
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void addVotingNumber() {
+
+        mRef = FirebaseDatabase.getInstance().getReference()
+                .child("GroupID");
+
+        mRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot forDataSnapshot: dataSnapshot.getChildren()) {
+                    for (DataSnapshot secondFor : forDataSnapshot.getChildren()) {
+                        for (DataSnapshot thirdFor : secondFor.getChildren()) {
+                            for(DataSnapshot forth: thirdFor.getChildren()){
+                                if(String.valueOf(forDataSnapshot.getKey())
+                                        .equals(roomNameEditText.getText().toString())
+                                        && String.valueOf(forth.getKey()).equals("Voted")){
+                                    Log.d("fanta", String.valueOf(forth.getValue()));
+                                    votedNumber = Integer.parseInt(String.valueOf(forth.getValue()));
+                                    Log.d("fanta", votedNumber.toString()
+                                    );
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public static String formatNumber(String number){
+        return NumberFormat.getNumberInstance(Locale.getDefault()).format(Integer.parseInt(number));
+    }
+
     // a szukseges adatok inicializalasa
     private void bindWidget(View view) {
         voteButton = view.findViewById(R.id.mVoteButton);
@@ -143,5 +229,6 @@ public class MainFragment extends Fragment {
         questionIdEditText = view.findViewById(R.id.mQuestionId);
         mRef = FirebaseDatabase.getInstance().getReference().child("GroupID");
     }
+
 
 }

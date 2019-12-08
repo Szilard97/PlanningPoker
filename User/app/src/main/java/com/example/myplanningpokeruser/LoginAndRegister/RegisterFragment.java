@@ -34,7 +34,6 @@ public class RegisterFragment extends Fragment {
     EditText rEmailEditText, rPasswordEditText;
     Button rRegisterButton;
     private DatabaseReference myRef;
-    private static Integer numberOfUser= 0;
 
     public RegisterFragment() {
     }
@@ -118,15 +117,9 @@ public class RegisterFragment extends Fragment {
 
         String [] user = emailNickName.split("@");
 
-        ++numberOfUser;
-
         myRef = FirebaseDatabase.getInstance().getReference();
 
         myRef.child("Users").child(user[0]).setValue("");
-
-        myRef.child("Users").child("Number of users").setValue(numberOfUser);
-
-        Log.d("alma", user[0]);
     }
 
 }

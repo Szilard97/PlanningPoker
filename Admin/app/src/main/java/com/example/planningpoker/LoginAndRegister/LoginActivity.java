@@ -24,9 +24,9 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    //mivel ez az egyetlen Activity ezert kell egy fugvegy ami a fragmenteket rateszi az Activityre
+    //add fragment to the FrameLayout
     private void initFragment() {
-        //ha nem letezik a FrameLayout amire tenni a fragmenteket akkor nem csinalja
+        //if frame layout does exist
         if(findViewById(R.id.frameLayout)!=null){
             fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

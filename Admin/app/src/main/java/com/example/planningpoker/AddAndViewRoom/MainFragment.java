@@ -18,7 +18,6 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import com.example.planningpoker.LoginAndRegister.LoginActivity;
-import com.example.planningpoker.Question.Question;
 import com.example.planningpoker.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -27,7 +26,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import java.util.ArrayList;
 import java.util.Calendar;
 public class MainFragment extends Fragment {
 
@@ -63,7 +61,7 @@ public class MainFragment extends Fragment {
     }
 
 
-    //az elemek inicializalasa
+    //initialization
     private void bindWidget(View view) {
         mRoomName = view.findViewById(R.id.RoomNameEditText);
         mQuestion = view.findViewById(R.id.mEditTextQuestion);
@@ -77,7 +75,7 @@ public class MainFragment extends Fragment {
         mVoteNumber = view.findViewById(R.id.mVoteNumberPlaneTaxt);
     }
 
-    //datum gomb listener, hogy a datumot megadjam gomb nyomasara es meg hiv egy fugvenyt ami majd vegzi tovabb
+    //date button listener, on press pick a date and call a new method to continue the process
     private void setDate() {
         dateButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,7 +85,7 @@ public class MainFragment extends Fragment {
         });
     }
 
-    //a datumot adom hozza a textViewhez, ezt hivja meg datum gomb nyomasara
+    //add date to textView,this was called when date button pressed
     private void mTextViewDate() {
         Calendar calendar = Calendar.getInstance();
         int YEAR = calendar.get(Calendar.YEAR);
@@ -111,7 +109,7 @@ public class MainFragment extends Fragment {
         datePickerDialog.show();
     }
 
-    //ido gomb listener, hogy az idot megadjam gomb nyomasara es meghiv egy fugvenyt ami majd vegzi tovabb
+    //time button listener, on press pick the time and call a new method to continue the process
     private void setTime() {
 
         timeButton.setOnClickListener(new View.OnClickListener() {
@@ -123,7 +121,7 @@ public class MainFragment extends Fragment {
 
     }
 
-    //az idot adom hozza a textViewhez, ezt hivja meg az ido gomb nyomasra
+    //add time to textView,this was called when date button pressed
     private void handleTimeButton() {
 
         Calendar calendar = Calendar.getInstance();
@@ -147,7 +145,7 @@ public class MainFragment extends Fragment {
         timePickerDialog.show();
     }
 
-    //a sajat szobam amiben latom a kerdeseimet ami gomb nyomasra meghiv egy fragmentet
+    //my room where i can see my questions which call a fragment on pressed button
     private void viewMyRoom() {
 
         mViewMyRoom.setOnClickListener(new View.OnClickListener() {
@@ -161,7 +159,7 @@ public class MainFragment extends Fragment {
         });
     }
 
-    //gomb nyomasra letre hoz egy szobat, de eloszor meghiv egy fugvenyt ami le ellenorzi, hogy a kert adatok ki vannak-e toltve
+    //on button press create a room, but first call a method which verify if the fields are blank or not
     private void createRoom() {
 
         mCreateRoomButton.setOnClickListener(new View.OnClickListener() {
@@ -187,6 +185,7 @@ public class MainFragment extends Fragment {
         });
     }
 
+    //call CreateQuestion and create user name
     private void addToDatabase() {
 
         FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -200,7 +199,7 @@ public class MainFragment extends Fragment {
         dataControl();
     }
 
-    //hozzaadja az adatbazishoz a kert adatokat
+    //add the requested data to the database
     private void createQuestion() {
         //ellenorzom, hogy a letrehozando kerdes mar letezik-e az adatbazisban
         dataControl();
@@ -221,22 +220,22 @@ public class MainFragment extends Fragment {
 
             //letrhozza a valasz lehetosegeket 1 2 3 4 5 es nem akar szavazni resz
             myRef.child("GroupID").child(mRoomName.getText().toString()).child(mQuestionID.getText().toString())
-                    .child(mQuestion.getText().toString()).child("1").setValue(" ");
+                    .child(mQuestion.getText().toString()).child("1").setValue("");
 
             myRef.child("GroupID").child(mRoomName.getText().toString()).child(mQuestionID.getText().toString())
-                    .child(mQuestion.getText().toString()).child("2").setValue(" ");
+                    .child(mQuestion.getText().toString()).child("2").setValue("");
 
             myRef.child("GroupID").child(mRoomName.getText().toString()).child(mQuestionID.getText().toString())
-                    .child(mQuestion.getText().toString()).child("3").setValue(" ");
+                    .child(mQuestion.getText().toString()).child("3").setValue("");
 
             myRef.child("GroupID").child(mRoomName.getText().toString()).child(mQuestionID.getText().toString())
-                    .child(mQuestion.getText().toString()).child("4").setValue(" ");
+                    .child(mQuestion.getText().toString()).child("4").setValue("");
 
             myRef.child("GroupID").child(mRoomName.getText().toString()).child(mQuestionID.getText().toString())
-                    .child(mQuestion.getText().toString()).child("5").setValue(" ");
+                    .child(mQuestion.getText().toString()).child("5").setValue("");
 
             myRef.child("GroupID").child(mRoomName.getText().toString()).child(mQuestionID.getText().toString())
-                    .child(mQuestion.getText().toString()).child("I don't want to answer").setValue(" ");
+                    .child(mQuestion.getText().toString()).child("I don't want to answer").setValue("");
 
             //hozzaadja a datumot es idot amit elozoleg be allitottunk
             myRef.child("GroupID").child(mRoomName.getText().toString()).child(mQuestionID.getText().toString())
@@ -246,6 +245,9 @@ public class MainFragment extends Fragment {
             // kerdes lathotosag ami alapertelmezetten False ezt az admin a kerdeseit hosszan nyomva lesz lehetosege aktivalni
             myRef.child("GroupID").child(mRoomName.getText().toString()).child(mQuestionID.getText().toString())
                     .child(mQuestion.getText().toString()).child("Permission").setValue("False");
+
+            myRef.child("GroupID").child(mRoomName.getText().toString()).child(mQuestionID.getText().toString())
+                    .child(mQuestion.getText().toString()).child("Voted").setValue("0");
 
             myRef.child("GroupID").child(mRoomName.getText().toString()).child(mQuestionID.getText().toString())
                     .child(mQuestion.getText().toString()).child("Expected votes").setValue(mVoteNumber.getText().toString());
@@ -259,7 +261,7 @@ public class MainFragment extends Fragment {
 
     }
 
-    //ellenorzi, hogy letezik-e a hozzaadando kerdes az adatbazisban
+    //verify if exist the question in the database which we like to add
     private void dataControl() {
 
         myRef.addValueEventListener(new ValueEventListener() {
@@ -283,7 +285,7 @@ public class MainFragment extends Fragment {
         });
     }
 
-    // az adatok az input filedekbol
+    //clear input fields
     private void createEmptyFields() {
         mRoomName.setText("");
         mQuestion.setText("");
@@ -293,7 +295,7 @@ public class MainFragment extends Fragment {
         mVoteNumber.setText("");
     }
 
-    //beirtae az osszes input adatot a kerdes hozzaadashoz
+    //check if all input field is fille
     private Boolean controlInputFieldsForCreateRoomButton() {
 
         if(!mRoomName.getText().toString().isEmpty() && !mQuestionID.getText().toString().isEmpty()

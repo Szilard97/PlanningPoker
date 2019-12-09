@@ -41,7 +41,7 @@ public class MyQuestionAdapter  extends RecyclerView.Adapter<MyQuestionAdapter.Q
 
     }
 
-    //hozzaadja a RecyclerView-hez az adatokat
+    //adds the data to the RecyclerView
     @Override
     public void onBindViewHolder(@NonNull QuestionViewHolder holder, int position) {
         Question question = questionList.get(position);
@@ -56,20 +56,21 @@ public class MyQuestionAdapter  extends RecyclerView.Adapter<MyQuestionAdapter.Q
         holder.textViewAnswerFive.setText(question.getAnswer5());
         holder.textViewAnswerIDont.setText(question.getIdontAnswer());
         holder.textViewPermission.setText(question.getPermission());
+        holder.voted.setText(question.getVoted());
 
     }
 
-    //megnezi, hogy hany kerdes van a a RecyclerViewban
+    //how many questions are in the RecyclerView
     @Override
     public int getItemCount() {
         return questionList.size();
     }
 
-    //inicializalas
+    //initialization
     class QuestionViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
 
         private TextView textViewRoom, textViewQuestionId,
-                    textViewExpireDate,
+                    textViewExpireDate, voted,
                     textViewQuestion, textViewAnswerOne,
                     textViewAnswerTwo, textViewAnswerThree,
                     textViewAnswerFour, textViewAnswerFive,
@@ -90,23 +91,24 @@ public class MyQuestionAdapter  extends RecyclerView.Adapter<MyQuestionAdapter.Q
             textViewAnswerIDont = itemView.findViewById(R.id.IDont);
             textViewExpireDate = itemView.findViewById(R.id.textViewEndDataEndTime);
             textViewPermission = itemView.findViewById(R.id.textViewPermission);
+            voted = itemView.findViewById(R.id.textViewVoted);
             cardView = itemView.findViewById(R.id.eCardView);
             cardView.setOnCreateContextMenuListener(this);
         }
 
-        //megjeleniti a kerdes modositasi lehetosegeket
+        //displays the setting options you want to change
         @Override
         public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
             menu.setHeaderTitle("Select an Option");
             menu.add(this.getAdapterPosition(), 121, 0, "Delete this item");
             menu.add(this.getAdapterPosition(), 122, 1, "Set Permission to True");
-            menu.add(this.getAdapterPosition(), 123, 2 ,"Set Permission to False");
+            /*menu.add(this.getAdapterPosition(), 123, 2 ,"Set Permission to False");*/
 
 
         }
     }
 
-    //kerdes torlese az ArrayListbol
+    //question delete from the ArrayList
     public void removeItem(int position){
         removeQuestion(questionList.get(position).getRoomName(),
                 questionList.get(position).getId());
@@ -114,13 +116,13 @@ public class MyQuestionAdapter  extends RecyclerView.Adapter<MyQuestionAdapter.Q
         notifyDataSetChanged();
     }
 
-    //kerdes torlese az adatbazisbol
+    //question delete from the Database
     private void removeQuestion( String roomName,  String id) {
         myRef = FirebaseDatabase.getInstance().getReference().child("GroupID").child(roomName).child(id);
         myRef.setValue(null);
     }
 
-    // a kerdes aktivalasa
+    // permission true for question
     public  void setPermissionTrue(int position){
 
                 //adatbazis inicializalasa
@@ -151,7 +153,6 @@ public class MyQuestionAdapter  extends RecyclerView.Adapter<MyQuestionAdapter.Q
                                 }
                             }
                         }
-
                     }
 
                     @Override
@@ -162,8 +163,8 @@ public class MyQuestionAdapter  extends RecyclerView.Adapter<MyQuestionAdapter.Q
 
     }
 
-    //a kerdes deaktivalasa
-    public  void setPermissionFalse(int position){
+    //Permission false for question
+    /*public  void setPermissionFalse(int position){
 
         //adatbazis inicializalasa
         myRef = FirebaseDatabase.getInstance().getReference().child("GroupID")
@@ -202,8 +203,5 @@ public class MyQuestionAdapter  extends RecyclerView.Adapter<MyQuestionAdapter.Q
             }
         });
 
-    }
-
-
-
+    }*/
 }

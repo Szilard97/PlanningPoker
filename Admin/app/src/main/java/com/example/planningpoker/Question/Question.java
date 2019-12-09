@@ -5,12 +5,13 @@ public class Question {
     private String roomName, id,
             expireDate, question,
             answer1, answer2, answer3,
-            answer4, answer5, idontAnswer, permission;
+            answer4, answer5, idontAnswer, permission, voted;
 
     public Question(String roomName, String id,
                     String question,  String one,
                     String two, String three, String four,
-                    String five, String iDont, String expire, String permission) {
+                    String five, String iDont, String expire,
+                    String permission, String voted) {
         this.question = question;
         this.roomName = roomName;
         this.id = id;
@@ -23,6 +24,7 @@ public class Question {
         this.idontAnswer = iDont;
         this.expireDate = expire;
         this.permission = permission;
+        this.voted =voted;
     }
 
     public Question() {}
@@ -69,5 +71,9 @@ public class Question {
 
     public String getPermission() {
         return "Permission: " + permission;
+    }
+
+    public String getVoted() {
+        return "Voted: " + voted;
     }
 }

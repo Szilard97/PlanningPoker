@@ -51,31 +51,31 @@ public class MyRoomFragment extends Fragment {
        return view;
     }
 
-    //adatok hozzaadasa a RecyclerViewhez
+    //add data to the  RecyclerView
     private void addDataToRecyclerView() {
 
-        // a jelenlegi bejelentkezett admin szobajit kerem le
+        //get current login admin
         getAdminRooms();
 
-        //az adatbazis inicializalom a GroupID-ra
+        //initialization database to the GroubId
         myRef = FirebaseDatabase.getInstance().getReference().child("GroupID");
 
-        //a recyclerViewhez hozzadok egy layoutMenagert
+        //add the recyclerView a layoutMenager
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        //le kerem az adatbazisbol a beirt kerdeseket
+        //get questions from the database
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                //egy kerdes osztalyt hozok letre es ahoz a hozok letre Stringeket
+                //create a Question class
                 Question questionEventListener;
                 String one= null, two = null,
                         three= null, four= null,
                         five= null, iDont= null,
-                        expire= null, permission = null;
+                        expire= null, permission = null, voted = null;
 
-                // vegig megyek az adatbazison
+                // checking the database
                 for(DataSnapshot forDataSnapshot: dataSnapshot.getChildren()) {
                     for (DataSnapshot secondFor : forDataSnapshot.getChildren()) {
                         for (DataSnapshot thirdFor: secondFor.getChildren()){
@@ -95,16 +95,20 @@ public class MyRoomFragment extends Fragment {
                                     expire = "Expire date: " + String.valueOf(forth.getValue());
                                 }else if(String.valueOf(forth.getKey()).equals("I don't want to answer")){
                                     iDont = String.valueOf(forth.getValue());
-                                }else
+                                }else if (String.valueOf(forth.getKey()).equals("Permission")) {
                                     permission = String.valueOf(forth.getValue());
+                                }else if(String.valueOf(forth.getValue()).equals("Voted"));
+                                    voted = String.valueOf(forth.getValue());
+
                             }
-                            //meghivom az Question osztalyt es abban lesznek egy kerdes adatai
+                            //calling the Question class and there will be the questions data
                             questionEventListener = new Question(
                                     String.valueOf(forDataSnapshot.getKey()),
                                     String.valueOf(secondFor.getKey()),
                                     String.valueOf(thirdFor.getKey()),
-                                    one, two, three, four, five, iDont, expire, permission);
-                            //hozzaadom egy ArrauListhez ha mar nincs benne
+                                    one, two, three, four, five, iDont, expire, permission, voted);
+
+                            // adding that to an ArrauList if its not already there
                             if (userRooms.contains(String.valueOf(forDataSnapshot.getKey()))){
                                     mArrayList.add(questionEventListener);
                             }
@@ -113,15 +117,15 @@ public class MyRoomFragment extends Fragment {
                     }
                 }
 
-                //egy uj Question Adaptert hozok letre aminek atadom az ArrayListet
+                //create a new Question adapter and adding the ArrayList to that
                 myQuestionAdapter = new MyQuestionAdapter(getContext(), mArrayList);
-                //a RecyclerViewhez hozzaadom az adapert
+                // adding the adapter to the RecyclerView
                 mRecyclerView.setAdapter(myQuestionAdapter);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                //ha valami gond van akkor Toast
+                //if there an error then Toast
                 Toast.makeText(getActivity(),
                         "Error mRecyclerView"+ databaseError.toString(),
                         Toast.LENGTH_SHORT).show();
@@ -129,7 +133,7 @@ public class MyRoomFragment extends Fragment {
         });
     }
 
-    //lekerel az aktualis bejelentkezett Admin kerdes szobait
+    //call the actual Admins question rooms
     private void getAdminRooms() {
 
         FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -158,36 +162,35 @@ public class MyRoomFragment extends Fragment {
         });
     }
 
-    //ijnicializalom a szukseges elemeket
+    //initializing required items
     private void bindWidget(View view) {
         mRecyclerView = view.findViewById(R.id.recyclerView);
         mArrayList = new ArrayList<>();
         rootView = view.findViewById(R.id.rootView);
     }
 
-    // a kerdest hosszan nyomva elojonnek a lehetosegek pl Torles vagy Aktivalas
+    // pressing the question the options will pop up
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
 
         switch (item.getItemId()){
 
             case 121:
-                //torlest vegzi ami meghivja az adapter removeItem() fuggvenyet
+                //making the delete, calling the adapters removeItem() function
                 myQuestionAdapter.removeItem(item.getGroupId());
                 displayMessage("Item deleted....");
                 return true;
 
             case 122:
-                //a kerdes aktivalasat vegzi, ami meghivja az adapter setPermissionTrue fuggvenyet
+                // activate the question which calls the adapters setPermissionTrue function
                 myQuestionAdapter.setPermissionTrue(item.getGroupId());
                 displayMessage("Permission selected true...");
                 return true;
 
-            case 123:
-                //a kerdes aktivalasat vegzi, ami meghivja az adapter setPermissionFalse fuggvenyet
+            /*case 123:
                 myQuestionAdapter.setPermissionFalse(item.getGroupId());
                 displayMessage("Permission selected true...");
-                return true;
+                return true;*/
 
                 default:
                     return super.onContextItemSelected(item);
@@ -195,9 +198,9 @@ public class MyRoomFragment extends Fragment {
         }
     }
 
-    //ha sikerult valamelyik kerdes modositasa akkor a kijelzo aljan kiirja, hogy mit csinalt az admin a kerdessel
+    //if the question modification succeed the display writes what the admin done with the question
     public void displayMessage(String message){
-        //Snackbar az az adott szoveg kijelzese a kepernyo aljan
+        //Snackbar, show the text in the buttom of the display
         Snackbar.make(rootView, message, Snackbar.LENGTH_SHORT).show();
     }
 }

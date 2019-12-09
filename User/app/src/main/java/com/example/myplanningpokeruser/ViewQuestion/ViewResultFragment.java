@@ -56,6 +56,7 @@ public class ViewResultFragment extends Fragment {
         return view;
     }
 
+    //initialization
     private void bindWidget(View view) {
         mRef = FirebaseDatabase.getInstance().getReference()
                 .child("GroupID");
@@ -82,6 +83,7 @@ public class ViewResultFragment extends Fragment {
             Toast.makeText(getContext(), "Problem", Toast.LENGTH_SHORT).show();
     }
 
+    //display your question information
     private void validationAndShowResult() {
 
         mRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -125,8 +127,6 @@ public class ViewResultFragment extends Fragment {
 
             }
         });
-
-        //expiredOrAllVoted();
     }
 
 }

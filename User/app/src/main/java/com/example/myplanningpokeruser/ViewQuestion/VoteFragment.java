@@ -34,7 +34,6 @@ public class VoteFragment extends Fragment {
             buttonVote3, buttonVote4, buttonVote5, buttonIDont;
     private String enteredQuestionId, enteredRoomName, enteredQuestion;
     private DatabaseReference mRef;
-    private String voteData;
 
 
     public VoteFragment() {
@@ -56,7 +55,7 @@ public class VoteFragment extends Fragment {
         return view;
     }
 
-    //kiiratom az adatokat az adatbazisbol a VoteFragmentbe
+    //release data from the database to VoteFragment
     private void questionVisualization() {
 
         mRef.addValueEventListener(new ValueEventListener() {
@@ -87,7 +86,7 @@ public class VoteFragment extends Fragment {
         });
     }
 
-    //a szavazo gombok Listener hogy mikor melyikre szavazok es lepik at a MainFragmentbe
+    //Voting Buttons and drop to the MainFragment
     private void vote() {
         mRef = FirebaseDatabase.getInstance().getReference();
 
@@ -152,7 +151,7 @@ public class VoteFragment extends Fragment {
         });
     }
 
-    //szavazo gombok mentese
+    //save votes to the database
     private void voteButton(final String data, String roomName, String questionId, String question) {
 
         FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -179,7 +178,7 @@ public class VoteFragment extends Fragment {
         });
     }
 
-    // a szukseges adatok inicializalasa
+    // initialization
     private void bindWidget(View view) {
 
         textViewQuestion = view.findViewById(R.id.vTextViewQuestion);

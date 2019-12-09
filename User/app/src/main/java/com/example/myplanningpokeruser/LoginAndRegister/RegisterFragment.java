@@ -38,7 +38,6 @@ public class RegisterFragment extends Fragment {
     public RegisterFragment() {
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -51,6 +50,7 @@ public class RegisterFragment extends Fragment {
         return view;
     }
 
+    //initialization
     private void bindWidget(View view) {
         rEmailEditText = view.findViewById(R.id.rEmailLabel);
         rPasswordEditText = view.findViewById(R.id.rPasswordLabel);
@@ -58,6 +58,7 @@ public class RegisterFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
     }
 
+    //register button onClickListener call method CreateNewUser
     private void register() {
 
         rRegisterButton.setOnClickListener(new View.OnClickListener() {
@@ -74,6 +75,7 @@ public class RegisterFragment extends Fragment {
 
     }
 
+    //check input filed that is empty or no
     private Boolean readDataForRegistration() {
 
         if(!rEmailEditText.getText().toString().isEmpty() && !rPasswordEditText.getText().toString().isEmpty()){
@@ -82,6 +84,7 @@ public class RegisterFragment extends Fragment {
         return false;
     }
 
+    //create a new user in Firebase
     private void createNewUser() {
         String email, password;
 
@@ -110,6 +113,8 @@ public class RegisterFragment extends Fragment {
                 });
     }
 
+    //add user nick name to the real time database
+    //nick name is first part of email address
     private void addNewUser() {
 
 

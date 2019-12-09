@@ -1,7 +1,5 @@
 package com.example.myplanningpokeruser.LoginAndRegister;
 
-
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -60,7 +58,7 @@ public class LoginFragment extends Fragment {
 
         return view;
     }
-
+    //cal register fragment
     private void register() {
         lRegisterButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,6 +69,7 @@ public class LoginFragment extends Fragment {
         });
     }
 
+    //get data from SharedPreferences
     private void getPreferencesData() {
 
         SharedPreferences sp = this.getActivity().getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
@@ -89,6 +88,7 @@ public class LoginFragment extends Fragment {
 
     }
 
+    //call login an check the checkBox
     private void loginButton() {
         lLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,6 +99,7 @@ public class LoginFragment extends Fragment {
         });
     }
 
+    //login to the application
     private void login() {
         String email, password;
         email = lEmailEditText.getText().toString().trim();
@@ -123,6 +124,7 @@ public class LoginFragment extends Fragment {
 
     }
 
+    //remember me check box is checked
     private void controlCheckBox() {
         if(mCheckBoxRemember.isChecked()){
             saveElement();
@@ -131,6 +133,7 @@ public class LoginFragment extends Fragment {
         }
     }
 
+    //if isChecked save elements
     private void saveElement() {
         Boolean boolIsChecked = mCheckBoxRemember.isChecked();
         SharedPreferences.Editor editor = mSharedPreference.edit();
@@ -138,9 +141,11 @@ public class LoginFragment extends Fragment {
         editor.putString("pref_pass", lPasswordEditText.getText().toString());
         editor.putBoolean("pref_check", boolIsChecked);
         editor.apply();
-        Toast.makeText(getActivity(), "Email and password has ben saved", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), "Email and password has ben saved",
+                Toast.LENGTH_SHORT).show();
     }
 
+    //initialization
     private void bindWidget(View view) {
         lEmailEditText = view.findViewById(R.id.rEmailLabel);
         lPasswordEditText = view.findViewById(R.id.rPasswordLabel);

@@ -18,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    //add fragment to the FrameLayout in MainActivity
     private void initFragment() {
         if (findViewById(R.id.frameLayout) != null) {
             fragmentManager = getSupportFragmentManager();

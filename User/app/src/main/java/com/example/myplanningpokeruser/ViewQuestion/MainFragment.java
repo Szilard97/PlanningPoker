@@ -60,6 +60,7 @@ public class MainFragment extends Fragment {
         return view;
     }
 
+    //view question (call checkEnteredData)
     private void viewQuestion() {
 
         viewQuestionButton.setOnClickListener(new View.OnClickListener() {
@@ -71,6 +72,7 @@ public class MainFragment extends Fragment {
 
     }
 
+    //sent data from the MainFragment to the Votefragment and call expiredOrAllVoted
     private void checkEnteredData() {
 
         if(roomNameEditText.getText().toString().equals("") &&
@@ -90,7 +92,7 @@ public class MainFragment extends Fragment {
 
     }
 
-    //szavazas gomb Listener es ellenorzes hogy be irtae az adatokat
+    //voting button Listen and check the submission
     private void vote() {
         voteButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,7 +108,7 @@ public class MainFragment extends Fragment {
         });
     }
 
-    //lekerem a lejarati datumot es ellenorzom hogy lejart-e
+    //I'll check the expiration date and see if it expires
     private void expirationDateCheck() {
 
         makeSureYouHaveAlreadyVoted();
@@ -177,6 +179,7 @@ public class MainFragment extends Fragment {
         });
     }
 
+    // user has already voted
     private void makeSureYouHaveAlreadyVoted() {
 
         alreadyVoted = false;
@@ -217,6 +220,7 @@ public class MainFragment extends Fragment {
         });
     }
 
+    //get actual votes and ++
     private void addVotingNumber() {
 
         mRef = FirebaseDatabase.getInstance().getReference()
@@ -256,6 +260,7 @@ public class MainFragment extends Fragment {
         });
     }
 
+    //add actual votes to the database
     private void addVoteToDatabase(Integer votedNumber) {
 
         mRef = FirebaseDatabase.getInstance().getReference()
@@ -266,7 +271,7 @@ public class MainFragment extends Fragment {
 
     }
 
-    // a szukseges adatok inicializalasa
+    //initialization
     private void bindWidget(View view) {
         voteButton = view.findViewById(R.id.mVoteButton);
         roomNameEditText = view.findViewById(R.id.mRoomNameEditText);
@@ -275,6 +280,7 @@ public class MainFragment extends Fragment {
         mRef = FirebaseDatabase.getInstance().getReference().child("GroupID");
     }
 
+    //expire date is expired and all user  voted
     private void expiredOrAllVoted() {
 
         mRef.addListenerForSingleValueEvent(new ValueEventListener() {

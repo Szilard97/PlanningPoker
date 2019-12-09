@@ -198,8 +198,6 @@ public class VoteFragment extends Fragment {
         }else
             Toast.makeText(getContext(), "Problem", Toast.LENGTH_SHORT).show();
 
-        Log.d("alma", enteredQuestionId + " " + enteredRoomName);
-
         mRef = FirebaseDatabase.getInstance().getReference().child("GroupID");
     }
 

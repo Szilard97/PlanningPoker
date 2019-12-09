@@ -24,24 +24,23 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class MainFragment extends Fragment {
 
-    private Button voteButton;
+    private Button voteButton, viewQuestionButton;
     private EditText roomNameEditText, questionIdEditText;
     private DatabaseReference mRef;
     private Date expireDate, currentDate;
-    private String expireDateString, permissionString;
+    private String expireDateString, permissionString, questionString, expectedVotes,
+            enteredRoomName, enteredQuestionId, voted;
     private Boolean alreadyVoted;
-    private Integer votedNumber;
+    private Integer votedNumber, expctedVote;
 
 
     public MainFragment() {
@@ -56,8 +55,39 @@ public class MainFragment extends Fragment {
 
         vote();
 
+        viewQuestion();
 
         return view;
+    }
+
+    private void viewQuestion() {
+
+        viewQuestionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkEnteredData();
+            }
+        });
+
+    }
+
+    private void checkEnteredData() {
+
+        if(roomNameEditText.getText().toString().equals("") &&
+            questionIdEditText.getText().toString().equals("")){
+            Toast.makeText(getContext(),
+                    "Please enter Room name and Question ID", Toast.LENGTH_SHORT).show();
+        }else{
+            ViewResultFragment viewResultFragment = new ViewResultFragment();
+            Bundle bundle = new Bundle();
+            bundle.putString("QuestionId", questionIdEditText.getText().toString());
+            bundle.putString("RoomName", roomNameEditText.getText().toString());
+            viewResultFragment.setArguments(bundle);
+
+            expiredOrAllVoted();
+
+        }
+
     }
 
     //szavazas gomb Listener es ellenorzes hogy be irtae az adatokat
@@ -80,7 +110,6 @@ public class MainFragment extends Fragment {
     private void expirationDateCheck() {
 
         makeSureYouHaveAlreadyVoted();
-        Log.d("tonic", alreadyVoted.toString() + " jjjj");
 
         mRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -90,6 +119,7 @@ public class MainFragment extends Fragment {
                     for (DataSnapshot secondFor : forDataSnapshot.getChildren()) {
                         for (DataSnapshot thirdFor : secondFor.getChildren()) {
                             for(DataSnapshot forth: thirdFor.getChildren()){
+
                                 if(roomNameEditText.getText().toString().equals(String.valueOf(forDataSnapshot.getKey()))){
                                     if(String.valueOf(forth.getKey()).equals("ExpirationDate")){
                                         expireDateString = String.valueOf(forth.getValue());
@@ -124,6 +154,8 @@ public class MainFragment extends Fragment {
                     bundle.putString("QuestionId", questionIdEditText.getText().toString());
                     bundle.putString("RoomName", roomNameEditText.getText().toString());
                     voteFragment.setArguments(bundle);
+
+                    addVotingNumber();
 
                     MainActivity.fragmentManager.beginTransaction()
                             .replace(R.id.frameLayout, voteFragment)
@@ -169,7 +201,6 @@ public class MainFragment extends Fragment {
                                         && String.valueOf(forDataSnapshot.getKey())
                                         .equals(roomNameEditText.getText().toString())){
                                     alreadyVoted = true;
-                                    addVotingNumber();
                                 }
 
 
@@ -197,14 +228,21 @@ public class MainFragment extends Fragment {
                 for(DataSnapshot forDataSnapshot: dataSnapshot.getChildren()) {
                     for (DataSnapshot secondFor : forDataSnapshot.getChildren()) {
                         for (DataSnapshot thirdFor : secondFor.getChildren()) {
+                            Log.d("fanta", thirdFor.getKey()+" dfsdf");
                             for(DataSnapshot forth: thirdFor.getChildren()){
-                                if(String.valueOf(forDataSnapshot.getKey())
+
+                                if (String.valueOf(forDataSnapshot.getKey())
+                                        .equals(roomNameEditText.getText().toString())
+                                        && String.valueOf(forth.getKey()).equals("Expected voted")){
+                                    expctedVote = Integer.parseInt(String.valueOf(forth.getValue()));
+
+                                }else if(String.valueOf(forDataSnapshot.getKey())
                                         .equals(roomNameEditText.getText().toString())
                                         && String.valueOf(forth.getKey()).equals("Voted")){
-                                    Log.d("fanta", String.valueOf(forth.getValue()));
                                     votedNumber = Integer.parseInt(String.valueOf(forth.getValue()));
-                                    Log.d("fanta", votedNumber.toString()
-                                    );
+                                    questionString = thirdFor.getKey();
+                                    votedNumber++;
+                                    addVoteToDatabase(votedNumber);
                                 }
                             }
                         }
@@ -218,8 +256,14 @@ public class MainFragment extends Fragment {
         });
     }
 
-    public static String formatNumber(String number){
-        return NumberFormat.getNumberInstance(Locale.getDefault()).format(Integer.parseInt(number));
+    private void addVoteToDatabase(Integer votedNumber) {
+
+        mRef = FirebaseDatabase.getInstance().getReference()
+                .child("GroupID");
+
+        mRef.child(roomNameEditText.getText().toString()).child(questionIdEditText.getText().toString())
+                .child(questionString).child("Voted").setValue(votedNumber);
+
     }
 
     // a szukseges adatok inicializalasa
@@ -227,8 +271,58 @@ public class MainFragment extends Fragment {
         voteButton = view.findViewById(R.id.mVoteButton);
         roomNameEditText = view.findViewById(R.id.mRoomNameEditText);
         questionIdEditText = view.findViewById(R.id.mQuestionId);
+        viewQuestionButton = view.findViewById(R.id.mViewResultButton);
         mRef = FirebaseDatabase.getInstance().getReference().child("GroupID");
     }
 
+    private void expiredOrAllVoted() {
 
+        mRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot dataSnapshot1: dataSnapshot.getChildren()){
+                    Log.d("fanta", String.valueOf(dataSnapshot1.getKey()));
+                    for (DataSnapshot dataSnapshot2: dataSnapshot1.getChildren()){
+                        Log.d("fanta", String.valueOf(dataSnapshot2.getKey()));
+                        for (DataSnapshot dataSnapshot3: dataSnapshot2.getChildren()){
+                            Log.d("fanta", String.valueOf(dataSnapshot3.getKey()));
+                            for (DataSnapshot dataSnapshot4: dataSnapshot3.getChildren()){
+                                Log.d("fanta", String.valueOf(dataSnapshot4.getKey()));
+
+                                if(String.valueOf(dataSnapshot1.getKey()).equals(enteredRoomName)&&
+                                        String.valueOf(dataSnapshot2.getKey()).equals(enteredQuestionId)){
+                                    if(String.valueOf(dataSnapshot4.getKey()).equals("ExpirationDate")){
+                                        expireDateString = dataSnapshot4.getValue().toString();
+                                    }else if(String.valueOf(dataSnapshot4.getKey()).equals("Expected votes")){
+                                        expectedVotes = dataSnapshot4.getValue().toString();
+                                        expctedVote = Integer.parseInt(expectedVotes);
+                                    }else if(String.valueOf(dataSnapshot4.getKey()).equals("Voted")){
+                                        voted = dataSnapshot4.getValue().toString();
+                                        votedNumber = Integer.parseInt(voted);
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        if(votedNumber >= expctedVote){
+            MainActivity.fragmentManager.beginTransaction()
+                    .replace(R.id.frameLayout, new ViewResultFragment())
+                    .addToBackStack("Main")
+                    .commit();
+        }
+        else{
+            Toast.makeText(getActivity(), "Sorry but the vote is over, Permission is False or has already voted", Toast.LENGTH_SHORT).show();
+        }
+
+    }
 }
